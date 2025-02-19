@@ -19,7 +19,7 @@ const customStyles = `
     }
 
     .list__item__left, .list__item__right {
-        z-index: 100;
+        z-index: 5;
     }`;
 
 const getEndingPipelines = async (date: Date) => {

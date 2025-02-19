@@ -57,6 +57,33 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "visuals",
+    children: [
+      {
+        kind: "content",
+        name: "hideSubject",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/*"],
+        },
+      },
+      {
+        kind: "content",
+        name: "changeTheme",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/*"],
+        },
+      },
+      {
+        kind: "content",
+        name: "applyTheme",
+        loadingStatus: "loading",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/*"],
+        },
+      },
+    ],
+  },
 ];
 
 export default modules;

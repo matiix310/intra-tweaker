@@ -14,13 +14,19 @@ for (let module of modules) {
           backgroundScriptConfigs.push(backgroundScript.default);
         }
       );
-    } else if (subModule.kind == "content")
+    } else if (subModule.kind == "content") {
+      if (!subModule.loadingStatus) subModule.loadingStatus = "complete";
       browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
-        if (changeInfo.status == "complete" && !disabled)
+        if (
+          !disabled &&
+          changeInfo.status &&
+          subModule.loadingStatus == changeInfo.status
+        )
           sendScript(
             "background/dist/modules/" + module.folder + "/" + subModule.name + ".js"
           );
       }, subModule.filter);
+    }
   }
 }
 

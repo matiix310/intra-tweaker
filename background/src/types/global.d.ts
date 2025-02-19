@@ -4,7 +4,12 @@ export type BackgroundScriptConfig = {
 };
 
 export type SubModule =
-  | { kind: "content"; filter: browser.tabs.UpdateFilter; name: string }
+  | {
+      kind: "content";
+      filter: browser.tabs.UpdateFilter;
+      name: string;
+      loadingStatus?: "complete" | "loading";
+    }
   | { kind: "background"; name: string };
 
 export type Module = {
