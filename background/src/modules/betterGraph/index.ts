@@ -1,4 +1,4 @@
-import { getGraph, getStats } from "../../common/graph";
+import { getGraph, getStats, getSubNodesStats, type Graph } from "../../common/graph";
 
 const removeWheelListener = () => {
   document.getElementById("graph")?.addEventListener(
@@ -10,9 +10,7 @@ const removeWheelListener = () => {
   );
 };
 
-const addGraphStats = async () => {
-  const graph = await getGraph(true);
-
+const addGraphStats = (graph?: Graph) => {
   if (!graph) return;
 
   const stats = getStats(graph);
@@ -41,7 +39,8 @@ const addGraphStats = async () => {
     }
 
     .graph-optional-node.node-validated {
-      border: 1px solid var(--trivia);
+      border: none;
+      background-color: var(--trivial);
     }
       
     .graph-stats-container {
@@ -87,9 +86,77 @@ const addGraphStats = async () => {
   graphElement?.appendChild(graphStatsContainer);
 };
 
-const run = () => {
+const addSubNodesToGraph = (
+  root: Graph,
+  nodes: {
+    name: string | undefined;
+    anchor: HTMLAnchorElement;
+  }[]
+) => {
+  const stats = getSubNodesStats(root);
+  const node = nodes.find((n) => n.name == root.name);
+
+  if (node && stats.required + stats.optional <= 6) {
+    let nodesStr = "";
+
+    const nodeHeight = parseFloat(
+      node.anchor.firstElementChild?.getAttribute("height") ?? "33"
+    );
+    const nodeWidth = parseFloat(
+      node.anchor.firstElementChild?.getAttribute("width") ?? "63"
+    );
+    const radius = nodeHeight / 6;
+    let x = -nodeWidth / 2 + radius;
+    const y = nodeHeight / 2;
+
+    for (let i = 0; i < stats.requiredValidated; i++) {
+      nodesStr += `<circle fill="var(--required-validated)" stroke="var(--background)" r="${radius}" cy="${y}" cx="${x}"></circle>`;
+      x += radius * 2.5;
+    }
+
+    for (let i = 0; i < stats.required - stats.requiredValidated; i++) {
+      nodesStr += `<circle fill="var(--background)" stroke-width="2px" stroke="var(--required)" r="${radius}" cy="${y}" cx="${x}"></circle>`;
+      x += radius * 2.5;
+    }
+
+    for (let i = 0; i < stats.optionalValidated; i++) {
+      nodesStr += `<circle fill="var(--trivial)" stroke="var(--background)" r="${radius}" cy="${y}" cx="${x}"></circle>`;
+      x += radius * 2.5;
+    }
+
+    for (let i = 0; i < stats.optional - stats.optionalValidated; i++) {
+      nodesStr += `<circle fill="var(--background)" stroke="#81B1DB" r="${radius}" cy="${y}" cx="${x}"></circle>`;
+      x += radius * 2.5;
+    }
+
+    if (nodesStr.length > 0) node.anchor.insertAdjacentHTML("beforeend", nodesStr);
+  }
+
+  root.children.forEach((child) => addSubNodesToGraph(child, nodes));
+};
+
+const addSubNodes = (graph?: Graph) => {
+  if (!graph) return;
+
+  const graphElement = document.getElementById("graph");
+
+  if (!graphElement) return;
+
+  const anchors = Array.from(graphElement.getElementsByTagName("a")).map((anchor) => {
+    return {
+      name: anchor.textContent?.trim(),
+      anchor,
+    };
+  });
+
+  addSubNodesToGraph(graph, anchors);
+};
+
+const run = async () => {
   removeWheelListener();
-  addGraphStats();
+  const graph = await getGraph(true);
+  addGraphStats(graph);
+  addSubNodes(graph);
 };
 
 run();

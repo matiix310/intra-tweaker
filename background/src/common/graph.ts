@@ -47,24 +47,31 @@ const buildGraph = async (
 ): Promise<Graph> => {
   const root = strToGraph(from, names);
 
-  if (recursive) {
-    const subNodes = await getGraph(
-      recursive,
-      "https://intra.forge.epita.fr/" + root.link
-    );
+  let promises: Promise<void>[] = [];
 
-    if (subNodes) root.subNodes = subNodes.children;
+  if (recursive) {
+    promises.push(
+      getGraph(recursive, "https://intra.forge.epita.fr/" + root.link).then(
+        (subNodes) => {
+          if (subNodes) root.subNodes = subNodes.children;
+        }
+      )
+    );
   }
 
-  const promises = await Promise.allSettled(
+  promises = promises.concat(
     links
       .filter((link) => link.from == from)
-      .map(({ to }) => buildGraph(to, links, names, recursive))
+      .map(({ to }) =>
+        buildGraph(to, links, names, recursive)
+          .then((g) => {
+            root.children.push(g);
+          })
+          .catch((e) => console.error(e))
+      )
   );
 
-  promises.forEach((p) => {
-    if (p.status == "fulfilled") root.children.push(p.value);
-  });
+  await Promise.allSettled(promises);
 
   return root;
 };
@@ -149,6 +156,25 @@ export const getStats = (
     stats.optional += childStats.optional;
     stats.optionalValidated += childStats.optionalValidated;
   });
+
+  return stats;
+};
+
+export const getSubNodesStats = (graph: Graph) => {
+  const stats = { required: 0, requiredValidated: 0, optional: 0, optionalValidated: 0 };
+
+  if (graph.name != "_root" && graph.name != "Tutorials") {
+    if (graph.subNodes.length > 0) {
+      // take its subNodes instead
+      graph.subNodes.forEach((node) => {
+        const childStats = getStats(node, []);
+        stats.required += childStats.required;
+        stats.requiredValidated += childStats.requiredValidated;
+        stats.optional += childStats.optional;
+        stats.optionalValidated += childStats.optionalValidated;
+      });
+    }
+  }
 
   return stats;
 };

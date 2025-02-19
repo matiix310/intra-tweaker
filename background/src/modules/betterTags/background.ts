@@ -1,7 +1,6 @@
 import type { BackgroundScriptConfig } from "../../types/global";
 
 function notify(title: string, content: string) {
-  console.log(title, content);
   browser.notifications.create({
     type: "basic",
     // iconUrl: browser.extension.getURL("icons/link-48.png"),
