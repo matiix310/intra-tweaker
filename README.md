@@ -13,11 +13,12 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
 - **Graph**:
     - Display the validated number of nodes (required and optional) recursively
     - No more zoom triggered with the mouse wheel
+    - Display sub nodes as little bubbles below the main nodes
 - **Speed**:
     - Images are blocked by default to speed up the loading time
 ## Installation
 
-You can download the extension in the xpi format from the [release](https://github.com/matiix310/intra-tweaker/releases/) tab and firefox with add the extension automatically for you. You can also build the app yourself by following the `Build locally` steps below.
+You can download the extension in the xpi format from the [releases](https://github.com/matiix310/intra-tweaker/releases/) tab and firefox with add the extension automatically for you. You can also build the app yourself by following the `Build locally` steps below.
 ## Build locally
 
 To build this project you need a node environement (I will use bun in the examples) and [web-ext](https://github.com/mozilla/web-ext) to build and run the final extension.
