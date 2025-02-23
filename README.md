@@ -2,7 +2,7 @@
 # Intra tweaker
 
 Intra tweaker is a firefox extension made to improve the intranet of the EPITA school.
-## Features
+## Modules
 
 - **Grafana**:
     - Grafana stats directly above the tags
