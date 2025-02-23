@@ -14,5 +14,7 @@ export type SubModule =
 
 export type Module = {
   folder: string;
+  name: string;
+  author: string;
   children: SubModule[];
 };

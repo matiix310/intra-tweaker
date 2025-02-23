@@ -1,0 +1,146 @@
+:root {
+  --background: #111217;
+  --border: #27282f;
+  --rectangle-background: #0d0e12;
+  --card-background: #1a1c23;
+  --green: #43b11d;
+  --red: #da3400;
+  --secondary-text: #9ca388;
+  --primary-text: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--primary-text);
+  font-family: "Inter", sans-serif;
+  width: 400px;
+  height: 600px;
+  overflow: hidden;
+}
+
+.main-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+
+#list {
+  width: 90%;
+  height: 100%;
+}
+
+#moduleSearch {
+  color: var(--primary-text);
+  font-weight: 500;
+  background-color: var(--rectangle-background);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 15px;
+  width: 70%;
+  outline: none;
+  padding: 10px 15px;
+  margin: 30px;
+}
+
+#resultCount {
+  width: 90%;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.module-card {
+  position: relative;
+  background: var(--card-background);
+  border-radius: 7px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  transition: border 0.3s ease-in-out;
+  margin-bottom: 20px;
+  overflow: hidden;
+  opacity: 0.4;
+}
+
+.module-card:hover {
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.module-card.active {
+  opacity: 1;
+}
+
+.module-card .left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+}
+
+.module-card .left .module-name {
+  font-weight: 500;
+}
+
+.module-card .left .module-author {
+  color: var(--secondary-text);
+  font-size: 13px;
+}
+
+.module-card .right {
+  position: relative;
+  height: 100%;
+  width: 10%;
+}
+
+.module-card .right .off,
+.module-card .right .on {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-weight: 500;
+}
+
+.module-card .right .on {
+  transform: translate(calc(-50% + 30px), calc(-50% - 70px));
+}
+
+.module-card.active .right .on {
+  transform: translate(-50%, -50%);
+}
+
+.module-card .right .off {
+  transform: translate(-50%, -50%);
+}
+
+.module-card.active .right .off {
+  transform: translate(calc(-50% - 30px), calc(-50% + 70px));
+}
+
+.module-card::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -20%;
+  height: 250%;
+  width: 33%;
+  background-color: var(--border);
+  transform-origin: 50% 50%;
+  transform: rotate(20deg) translate(-50%, -50%);
+  transition: background-color 0.3s ease-in-out;
+}
+
+.module-card.active::before {
+  background-color: var(--green);
+}

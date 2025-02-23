@@ -3,6 +3,8 @@ import type { Module } from "./types/global";
 const modules: Module[] = [
   {
     folder: "grafanaStats",
+    name: "Grafana",
+    author: "Matiix310",
     children: [
       {
         kind: "content",
@@ -15,6 +17,8 @@ const modules: Module[] = [
   },
   {
     folder: "betterTags",
+    name: "Tags",
+    author: "Matiix310",
     children: [
       {
         kind: "content",
@@ -31,6 +35,8 @@ const modules: Module[] = [
   },
   {
     folder: "speedBoost",
+    name: "Speed",
+    author: "Matiix310",
     children: [
       {
         kind: "background",
@@ -47,6 +53,8 @@ const modules: Module[] = [
   },
   {
     folder: "betterGraph",
+    name: "Graph",
+    author: "Matiix310",
     children: [
       {
         kind: "content",
@@ -59,6 +67,8 @@ const modules: Module[] = [
   },
   {
     folder: "visuals",
+    name: "Visuals",
+    author: "Matiix310",
     children: [
       {
         kind: "content",
