@@ -71,7 +71,7 @@ const displayGrafana = () => {
 <path d="M1 1V14.8598M21 21H1V14.8598M1 14.8598L8.83505 7.00738L13.1502 11.3321L21 3.46494M21 3.46494V7.00738M21 3.46494H17.8336" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"></path>
 </svg>Stats`;
   const grafanaLink =
-    "https://grafana.ops.k8s.cri.epita.fr/k8s/clusters//api/v1/namespaces/cattle-monitoring-system/services/http:rancher-monitoring-grafana:80/proxy/d/cskZHC4Hk/maas-overview-copy?orgId=1&refresh=30s";
+    "https://grafana.ops.k8s.cri.epita.fr/k8s/clusters/api/v1/namespaces/cattle-monitoring-system/services/http:rancher-monitoring-grafana:80/proxy/d/cskZHC4Hk/maas-overview-copy?orgId=1&refresh=30s";
 
   const statsElementStr = `
     <div class="submissions">

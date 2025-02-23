@@ -21,7 +21,6 @@ body {
   font-family: "Inter", sans-serif;
   width: 400px;
   height: 600px;
-  overflow: hidden;
 }
 
 .main-container {
@@ -31,6 +30,25 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: start;
+}
+
+.quote {
+  position: relative;
+  width: 90%;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.quote::before {
+  content: "";
+  position: absolute;
+  height: 80%;
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+  width: 3px;
+  border-radius: 100px;
+  background-color: var(--primary-text);
 }
 
 #list {

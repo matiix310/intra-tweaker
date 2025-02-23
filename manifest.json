@@ -20,7 +20,10 @@
     "storage",
     "webRequest",
     "webRequestBlocking",
-    "*://*.epita.fr/*"
+    "*://intra.forge.epita.fr/*",
+    "*://grafana.ops.k8s.cri.epita.fr/k8s/clusters/api/*",
+    "*://s3.cri.epita.fr/cri-intranet-photos/*",
+    "*://photos.cri.epita.fr/*"
   ],
 
   "background": {
