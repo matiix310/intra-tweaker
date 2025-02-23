@@ -4,9 +4,9 @@ import modules from "./src/modules";
 // clear old build
 if (existsSync("dist")) fs.rmSync("dist", { recursive: true, force: true });
 
-// main script and modules
+// main script
 await Bun.build({
-  entrypoints: ["src/index.ts", "src/modules.ts"],
+  entrypoints: ["src/index.ts"],
   env: "inline",
   outdir: "dist",
 });
