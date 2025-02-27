@@ -56,7 +56,7 @@ export const editTheme = () => {
 export const getCurrentDisplacement = () => {
   const storageHDisplacement = localStorage.getItem("hDisplacement");
   const storageSDisplacement = localStorage.getItem("sDisplacement");
-  const storageLDisplacement = localStorage.getItem("LDisplacement");
+  const storageLDisplacement = localStorage.getItem("lDisplacement");
   let hDisplacement = storageHDisplacement ? parseFloat(storageHDisplacement) : 0;
   let sDisplacement = storageSDisplacement ? parseFloat(storageSDisplacement) : 0;
   let lDisplacement = storageLDisplacement ? parseFloat(storageLDisplacement) : 0;
