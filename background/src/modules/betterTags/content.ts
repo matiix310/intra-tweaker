@@ -89,14 +89,16 @@ const getRunningPipelines = async (date: Date) => {
   return parseInt(json.data.result[0].values[0][1]);
 };
 
-const getTagStat = async (tag: Tag, totalTag: number, endingPipelines: number) => {
-  // seconds
-  if (totalTag < 10) totalTag = 1;
-  const timeToRun = (totalTag * 60) / endingPipelines;
-  const remaining = tag.date.getTime() / 1000 + timeToRun - Date.now() / 1000;
-  const percentage = 100 - (remaining * 100) / timeToRun;
+const getTagStat = async (tag: Tag, rank: number, endingPipelines: number) => {
+  const runningTags = await getRunningPipelines(new Date());
+  // TODO change 10 to running tags
+  if (rank <= runningTags) rank = 1;
+  const remaining = (rank * 60) / endingPipelines;
+  const totalTime = remaining + (Date.now() - tag.date.getTime());
+  const percentage = (remaining * 100) / totalTime;
 
   return {
+    // in seconds
     remaining: Math.max(Math.round(remaining), 0),
     percentage: Math.max(Math.min(percentage, 100), 0),
   };
@@ -119,6 +121,8 @@ const run = async () => {
 
   const tags = getAllTags();
 
+  if (tags.length == 0) return;
+
   // add total number of tags
   const titles = Array.from(document.getElementsByClassName("title")).filter((t) =>
     t.textContent?.includes("Tags")
@@ -136,49 +140,63 @@ const run = async () => {
 
   // get all the running tag
   const processingTags = tags.filter((t) => t.status == "PROCESSING");
+  processingTags[0].date = new Date();
 
   processingTags.forEach(async (tag) => {
     const toRunPipelines = await getToRunPipelines(tag.date);
     const runningPipelines = await getRunningPipelines(tag.date);
-    const endingPipelines = await getEndingPipelines(tag.date);
+    let rank = toRunPipelines + runningPipelines;
+    let lastTime = Date.now();
 
     tag.element.classList.add("loading");
 
     setInterval(async () => {
-      const tagStat = await getTagStat(
-        tag,
-        toRunPipelines + runningPipelines,
-        endingPipelines
-      );
+      // compute the new rank
+      const endingPipelines = await getEndingPipelines(new Date());
+      const time = Date.now();
+      rank = Math.max(0, rank - (time - lastTime) * (endingPipelines / (1_000 * 60)));
+      lastTime = time;
+      const tagStat = await getTagStat(tag, rank, endingPipelines);
       const subName = tag.element.getElementsByClassName("list__item__subname")[0];
       subName.textContent =
-        subName.textContent?.split(" | ETA")[0] +
-        " | ETA: " +
-        tagStat.remaining +
-        " seconds";
+        subName.textContent?.split(" | Rank: ")[0] +
+        ` | Rank: ${Math.floor(rank)} | ETA: ${tagStat.remaining} seconds`;
       tag.element.setAttribute("style", `--percentage: ${tagStat.percentage}%`);
     }, 500);
   });
 
-  setInterval(async () => {
-    const newTags = await getTagsNow();
-    for (let tag of processingTags) {
-      if (newTags.filter((t) => t.name == tag.name)[0].status != "PROCESSING") {
-        const titleStr = tag.status == "ERROR" ? `Tag error` : `Tag succeded`;
-        const contentStr =
-          tag.status == "ERROR"
-            ? `Tag ${tag.name} is in error state: ${tag.errorStatus}`
-            : `Tag ${tag.name} finished running and is at ${tag.percentage}%`;
-        browser.runtime.sendMessage({
-          action: "notify",
-          title: titleStr,
-          content: contentStr,
-        });
+  watchTags(processingTags);
+};
 
-        window.location.reload();
-      }
+const watchTags = async (processingTags: Tag[]) => {
+  const start = Date.now();
+  const newTags = await getTagsNow();
+  console.log(newTags);
+  for (let tag of processingTags) {
+    if (newTags.filter((t) => t.name == tag.name)[0].status != "PROCESSING") {
+      const titleStr = tag.status == "ERROR" ? `Tag error` : `Tag succeded`;
+      const contentStr =
+        tag.status == "ERROR"
+          ? `Tag ${tag.name} is in error state: ${tag.errorStatus}`
+          : `Tag ${tag.name} finished running and is at ${tag.percentage}%`;
+      browser.runtime.sendMessage({
+        action: "notify",
+        title: titleStr,
+        content: contentStr,
+      });
+
+      window.location.reload();
+      return;
     }
-  }, 500);
+  }
+
+  const processingTime = Date.now() - start;
+
+  // 3 seconds
+  if (processingTime < 2000)
+    await new Promise((r) => setTimeout(r, 2000 - processingTime));
+
+  watchTags(processingTags);
 };
 
 run();
