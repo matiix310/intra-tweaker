@@ -95,24 +95,8 @@ const getRunningPipelines = async (date: Date) => {
   return parseInt(json.data.result[0].values[0][1]);
 };
 
-const getTagStat = async (tag: Tag, endingPipelines: number) => {
+const getTagStat = async (tag: Tag, rank: number, endingPipelines: number) => {
   const runningTags = await getRunningPipelines(new Date());
-
-  // check if tag is already stored
-  let storedTagsStr = localStorage.getItem("running-tags");
-  let storedTags: { name: string; rank: number }[] = [];
-
-  if (!storedTagsStr) localStorage.setItem("running-tags", JSON.stringify([]));
-  else storedTags = JSON.parse(storedTagsStr);
-
-  let storedTag = storedTags.filter((t) => t.name == tag.name);
-  if (storedTag.length == 0 || !storedTag[0].rank) {
-    storedTags.push({ name: tag.name, rank: runningTags });
-  }
-
-  let rank = storedTags.filter((t) => t.name == tag.name)[0].rank;
-
-  if (!rank) return;
 
   // TODO change 10 to running tags
   if (rank <= runningTags) rank = 1;
@@ -166,11 +150,26 @@ const run = async () => {
   const processingTags = tags.filter((t) => t.status == "PROCESSING");
   processingTags[0].date = new Date();
 
+  let lastTime = Date.now();
+
+  let storedTagsStr = localStorage.getItem("running-tags");
+  let storedTags: { [key: string]: number } = {};
+
+  if (!storedTagsStr) localStorage.setItem("running-tags", "{}");
+  else storedTags = JSON.parse(storedTagsStr);
+
+  // remove processed tags
+  tags
+    .filter((t) => t.status != "PROCESSING")
+    .forEach((t) => delete storedTags[t.name]);
+
   processingTags.forEach(async (tag) => {
     const toRunPipelines = await getToRunPipelines(tag.date);
     const runningPipelines = await getRunningPipelines(tag.date);
-    let rank = toRunPipelines + runningPipelines;
-    let lastTime = Date.now();
+
+    if (!storedTags[tag.name]) {
+      storedTags[tag.name] = runningPipelines + toRunPipelines;
+    }
 
     tag.element.classList.add("loading");
 
@@ -178,22 +177,32 @@ const run = async () => {
       // compute the new rank
       const endingPipelines = await getEndingPipelines(new Date());
       const time = Date.now();
-      rank = Math.max(
+      storedTags[tag.name] = Math.max(
         0,
-        rank - (time - lastTime) * (endingPipelines / (1_000 * 60))
+        storedTags[tag.name] -
+          (time - lastTime) * (endingPipelines / (1_000 * 60))
       );
       lastTime = time;
-      const tagStat = await getTagStat(tag, rank);
+      localStorage.setItem("running-tags", JSON.stringify(storedTags));
+      const tagStat = await getTagStat(
+        tag,
+        storedTags[tag.name],
+        endingPipelines
+      );
       if (!tagStat) return;
       const subName = tag.element.getElementsByClassName(
         "list__item__subname"
       )[0];
       subName.textContent =
         subName.textContent?.split(" | Rank: ")[0] +
-        ` | Rank: ${Math.floor(rank)} | ETA: ${tagStat.remaining} seconds`;
+        ` | Rank: ${Math.floor(storedTags[tag.name])} | ETA: ${
+          tagStat.remaining
+        } seconds`;
       tag.element.setAttribute("style", `--percentage: ${tagStat.percentage}%`);
     }, 500);
   });
+
+  localStorage.setItem("running-tags", JSON.stringify(storedTags));
 
   watchTags(processingTags);
 };
