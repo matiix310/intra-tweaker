@@ -29,7 +29,10 @@ const getEndingPipelines = async (date: Date) => {
   const formData = new FormData();
 
   formData.append("query", "sum(rate(pipelines_ended_total[1m]))*60");
-  formData.append("start", (Math.floor(date.getTime() / 1000) - 300).toString());
+  formData.append(
+    "start",
+    (Math.floor(date.getTime() / 1000) - 300).toString()
+  );
   formData.append("end", Math.floor(date.getTime() / 1000).toString());
   formData.append("step", "15");
 
@@ -75,7 +78,10 @@ const getRunningPipelines = async (date: Date) => {
 
   const formData = new FormData();
 
-  formData.append("query", 'sum(pipelines_running{namespace="forge-intranet"})');
+  formData.append(
+    "query",
+    'sum(pipelines_running{namespace="forge-intranet"})'
+  );
   formData.append("start", Math.floor(date.getTime() / 1000).toString());
   formData.append("end", Math.floor(date.getTime() / 1000).toString());
   formData.append("step", "120");
@@ -89,13 +95,30 @@ const getRunningPipelines = async (date: Date) => {
   return parseInt(json.data.result[0].values[0][1]);
 };
 
-const getTagStat = async (tag: Tag, rank: number, endingPipelines: number) => {
+const getTagStat = async (tag: Tag, endingPipelines: number) => {
   const runningTags = await getRunningPipelines(new Date());
+
+  // check if tag is already stored
+  let storedTagsStr = localStorage.getItem("running-tags");
+  let storedTags: { name: string; rank: number }[] = [];
+
+  if (!storedTagsStr) localStorage.setItem("running-tags", JSON.stringify([]));
+  else storedTags = JSON.parse(storedTagsStr);
+
+  let storedTag = storedTags.filter((t) => t.name == tag.name);
+  if (storedTag.length == 0 || !storedTag[0].rank) {
+    storedTags.push({ name: tag.name, rank: runningTags });
+  }
+
+  let rank = storedTags.filter((t) => t.name == tag.name)[0].rank;
+
+  if (!rank) return;
+
   // TODO change 10 to running tags
   if (rank <= runningTags) rank = 1;
   const remaining = (rank * 60) / endingPipelines;
   const totalTime = remaining + (Date.now() - tag.date.getTime());
-  const percentage = (remaining * 100) / totalTime;
+  const percentage = totalTime - (remaining * 100) / totalTime;
 
   return {
     // in seconds
@@ -124,8 +147,8 @@ const run = async () => {
   if (tags.length == 0) return;
 
   // add total number of tags
-  const titles = Array.from(document.getElementsByClassName("title")).filter((t) =>
-    t.textContent?.includes("Tags")
+  const titles = Array.from(document.getElementsByClassName("title")).filter(
+    (t) => t.textContent?.includes("Tags")
   );
   if (titles.length > 0) titles[0].innerHTML += ` (${tags.length})`;
 
@@ -134,8 +157,9 @@ const run = async () => {
     .filter((t) => t.status == "ERROR")
     .forEach(
       (t) =>
-        (t.element.getElementsByClassName("list__item__subname")[0].textContent +=
-          " | Reason: " + t.errorStatus)
+        (t.element.getElementsByClassName(
+          "list__item__subname"
+        )[0].textContent += " | Reason: " + t.errorStatus)
     );
 
   // get all the running tag
@@ -154,10 +178,16 @@ const run = async () => {
       // compute the new rank
       const endingPipelines = await getEndingPipelines(new Date());
       const time = Date.now();
-      rank = Math.max(0, rank - (time - lastTime) * (endingPipelines / (1_000 * 60)));
+      rank = Math.max(
+        0,
+        rank - (time - lastTime) * (endingPipelines / (1_000 * 60))
+      );
       lastTime = time;
-      const tagStat = await getTagStat(tag, rank, endingPipelines);
-      const subName = tag.element.getElementsByClassName("list__item__subname")[0];
+      const tagStat = await getTagStat(tag, rank);
+      if (!tagStat) return;
+      const subName = tag.element.getElementsByClassName(
+        "list__item__subname"
+      )[0];
       subName.textContent =
         subName.textContent?.split(" | Rank: ")[0] +
         ` | Rank: ${Math.floor(rank)} | ETA: ${tagStat.remaining} seconds`;
