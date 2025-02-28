@@ -52,7 +52,8 @@ const addColorPicker = () => {
   const main = document.getElementsByTagName("main")[0];
   if (!main) return;
 
-  const { hDisplacement, lDisplacement, sDisplacement } = getCurrentDisplacement();
+  const { hDisplacement, lDisplacement, sDisplacement } =
+    getCurrentDisplacement();
 
   const colorSliderContainer = document.createElement("div");
   colorSliderContainer.id = "colorSwitcherContainer";
@@ -136,6 +137,23 @@ const addColorPicker = () => {
     visible = !visible;
   });
   container.insertAdjacentElement("afterbegin", anchor);
+
+  const disco = document.createElement("a");
+  disco.innerHTML = `<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M489.478 22.522C459.449 -7.50733 411.402 -7.50733 381.372 22.522L327.32 76.5748L306.299 55.5543C294.287 43.5425 276.27 43.5425 264.258 55.5543L240.235 76.5748C228.223 88.5865 228.223 106.604 240.235 118.616L390.381 268.762C402.393 280.774 420.411 280.774 432.422 268.762L453.443 247.742C465.455 235.73 465.455 217.713 453.443 205.701L435.425 184.68L489.478 130.628C519.507 100.598 519.507 52.5513 489.478 22.522ZM87.0851 316.809C21.0205 382.874 60.0587 412.903 0 490.979L21.0205 512C99.0968 451.941 129.126 490.98 195.191 424.915L348.34 271.765L240.235 163.66L87.0851 316.809Z" fill="black"/>
+    </svg>`;
+
+  disco.addEventListener("click", () => {
+    let i = 0;
+    setInterval(() => {
+      i += 15 % 360;
+      localStorage.setItem("hDisplacement", i.toString());
+      editTheme();
+    }, 100);
+    localStorage.setItem("sDisplacement", "100");
+    localStorage.setItem("lDisplacement", "0");
+  });
+  container.insertAdjacentElement("afterbegin", disco);
 };
 
 const run = () => {
