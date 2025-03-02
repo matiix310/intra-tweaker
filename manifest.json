@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Intra tweaker",
-  "version": "1.1.2",
+  "version": "1.1.10",
 
   "description": "Set of tools to make the intra better",
 
@@ -29,8 +29,6 @@
   "background": {
     "scripts": ["background/dist/index.js"]
   },
-
-  "license": "MIT",
 
   "browser_specific_settings": {
     "gecko": {

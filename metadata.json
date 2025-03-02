@@ -1,0 +1,11 @@
+{
+  "version": { "license": "MIT" },
+  "categories": { "firefox": ["other"] },
+  "summary": {
+    "en-US": "Set of tools to make the intra better"
+  },
+  "requires_payment": false,
+  "homepage": {
+    "en-US": "https://github.com/matiix310/intra-tweaker"
+  }
+}
