@@ -7,6 +7,8 @@ type variable = {
 const style = document.createElement("style");
 document.head.appendChild(style);
 
+let chromaIntervale: Timer;
+
 export const editTheme = () => {
   const storageHDisplacement = localStorage.getItem("hDisplacement");
   const storageSDisplacement = localStorage.getItem("sDisplacement");
@@ -15,6 +17,27 @@ export const editTheme = () => {
   let sDisplacement = storageSDisplacement ? parseFloat(storageSDisplacement) : 0;
   let lDisplacement = storageLDisplacement ? parseFloat(storageLDisplacement) : 0;
 
+  const storageStyle = localStorage.getItem("style") ?? "styleCustom";
+
+  clearInterval(chromaIntervale);
+
+  if (storageStyle == "styleChroma") {
+    sDisplacement = 100;
+    lDisplacement = 0;
+    chromaIntervale = setInterval(() => {
+      hDisplacement = (hDisplacement + 10) % 360;
+      applyDisplacement(hDisplacement, sDisplacement, lDisplacement);
+    }, 100);
+  }
+
+  applyDisplacement(hDisplacement, sDisplacement, lDisplacement);
+};
+
+const applyDisplacement = (
+  hDisplacement: number,
+  sDisplacement: number,
+  lDisplacement: number
+) => {
   const variables: variable[] = [
     { name: "background", dark: [230, 15, 7.8], light: [210, 20, 98] },
     { name: "card-background", dark: [227, 14.8, 12], light: [200, 20, 100] },
@@ -50,7 +73,7 @@ export const editTheme = () => {
 
   newStyles += "}";
 
-  style.innerHTML = newStyles;
+  window.requestAnimationFrame(() => (style.innerHTML = newStyles));
 };
 
 export const getCurrentDisplacement = () => {
