@@ -194,18 +194,26 @@ const run = async () => {
 const watchTags = async (currentTags: Tag[]) => {
   const start = Date.now();
   const newTags = await getTagsNow();
-  for (let tag of currentTags) {
-    if (newTags.filter((t) => t.name == tag.name)[0].status != tag.status) {
-      const titleStr = tag.name;
+  for (let newTag of newTags) {
+    const tagFilter = currentTags.filter((t) => t.name == newTag.name);
+    if (tagFilter.length == 0 || tagFilter[0].status != newTag.status) {
+      const titleStr = newTag.name;
       let contentStr = "Unknown";
-      if (tag.status == "ERROR") contentStr = `Error state: ${tag.errorStatus}`;
-      else if (tag.status == "SUCCEEDED") contentStr = `At ${tag.percentage}%`;
-      else if (tag.status == "IDLE") contentStr = `Idle state`;
-      browser.runtime.sendMessage({
-        action: "notify",
-        title: titleStr,
-        content: contentStr,
-      });
+
+      if (newTag.status == "ERROR") contentStr = `Error state: ${newTag.errorStatus}`;
+      else if (newTag.status == "SUCCEEDED") contentStr = `At ${newTag.percentage}%`;
+      else if (newTag.status == "IDLE") contentStr = `Idle state`;
+
+      try {
+        browser.runtime.sendMessage({
+          action: "notify",
+          title: titleStr,
+          content: contentStr,
+        });
+      } catch (error) {
+        console.error("Error while send a notification for a tag update:");
+        console.error(error);
+      }
 
       window.location.reload();
       return;
