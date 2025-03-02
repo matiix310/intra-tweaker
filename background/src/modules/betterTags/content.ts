@@ -29,10 +29,7 @@ const getEndingPipelines = async (date: Date) => {
   const formData = new FormData();
 
   formData.append("query", "sum(rate(pipelines_ended_total[1m]))*60");
-  formData.append(
-    "start",
-    (Math.floor(date.getTime() / 1000) - 300).toString()
-  );
+  formData.append("start", (Math.floor(date.getTime() / 1000) - 300).toString());
   formData.append("end", Math.floor(date.getTime() / 1000).toString());
   formData.append("step", "15");
 
@@ -78,10 +75,7 @@ const getRunningPipelines = async (date: Date) => {
 
   const formData = new FormData();
 
-  formData.append(
-    "query",
-    'sum(pipelines_running{namespace="forge-intranet"})'
-  );
+  formData.append("query", 'sum(pipelines_running{namespace="forge-intranet"})');
   formData.append("start", Math.floor(date.getTime() / 1000).toString());
   formData.append("end", Math.floor(date.getTime() / 1000).toString());
   formData.append("step", "120");
@@ -102,7 +96,7 @@ const getTagStat = async (tag: Tag, rank: number, endingPipelines: number) => {
   if (rank <= runningTags) rank = 1;
   const remaining = (rank * 60) / endingPipelines;
   const totalTime = remaining + (Date.now() - tag.date.getTime());
-  const percentage = totalTime - (remaining * 100) / totalTime;
+  const percentage = 100 - (remaining * 100) / totalTime;
 
   return {
     // in seconds
@@ -131,8 +125,8 @@ const run = async () => {
   if (tags.length == 0) return;
 
   // add total number of tags
-  const titles = Array.from(document.getElementsByClassName("title")).filter(
-    (t) => t.textContent?.includes("Tags")
+  const titles = Array.from(document.getElementsByClassName("title")).filter((t) =>
+    t.textContent?.includes("Tags")
   );
   if (titles.length > 0) titles[0].innerHTML += ` (${tags.length})`;
 
@@ -141,9 +135,8 @@ const run = async () => {
     .filter((t) => t.status == "ERROR")
     .forEach(
       (t) =>
-        (t.element.getElementsByClassName(
-          "list__item__subname"
-        )[0].textContent += " | Reason: " + t.errorStatus)
+        (t.element.getElementsByClassName("list__item__subname")[0].textContent +=
+          " | Reason: " + t.errorStatus)
     );
 
   // get all the running tag
@@ -159,9 +152,7 @@ const run = async () => {
   else storedTags = JSON.parse(storedTagsStr);
 
   // remove processed tags
-  tags
-    .filter((t) => t.status != "PROCESSING")
-    .forEach((t) => delete storedTags[t.name]);
+  tags.filter((t) => t.status != "PROCESSING").forEach((t) => delete storedTags[t.name]);
 
   processingTags.forEach(async (tag) => {
     const toRunPipelines = await getToRunPipelines(tag.date);
@@ -179,20 +170,13 @@ const run = async () => {
       const time = Date.now();
       storedTags[tag.name] = Math.max(
         0,
-        storedTags[tag.name] -
-          (time - lastTime) * (endingPipelines / (1_000 * 60))
+        storedTags[tag.name] - (time - lastTime) * (endingPipelines / (1_000 * 60))
       );
       lastTime = time;
       localStorage.setItem("running-tags", JSON.stringify(storedTags));
-      const tagStat = await getTagStat(
-        tag,
-        storedTags[tag.name],
-        endingPipelines
-      );
+      const tagStat = await getTagStat(tag, storedTags[tag.name], endingPipelines);
       if (!tagStat) return;
-      const subName = tag.element.getElementsByClassName(
-        "list__item__subname"
-      )[0];
+      const subName = tag.element.getElementsByClassName("list__item__subname")[0];
       subName.textContent =
         subName.textContent?.split(" | Rank: ")[0] +
         ` | Rank: ${Math.floor(storedTags[tag.name])} | ETA: ${
