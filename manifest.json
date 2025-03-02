@@ -30,6 +30,8 @@
     "scripts": ["background/dist/index.js"]
   },
 
+  "license": "MIT",
+
   "browser_specific_settings": {
     "gecko": {
       "id": "{9d7b266a-9484-42d3-a1ef-ec87ee4fa0e1}"
