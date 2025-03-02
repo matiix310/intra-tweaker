@@ -25,9 +25,9 @@ export const editTheme = () => {
     sDisplacement = 100;
     lDisplacement = 0;
     chromaIntervale = setInterval(() => {
-      hDisplacement = (hDisplacement + 10) % 360;
+      hDisplacement = (hDisplacement + 5) % 360;
       applyDisplacement(hDisplacement, sDisplacement, lDisplacement);
-    }, 100);
+    }, 50);
   }
 
   applyDisplacement(hDisplacement, sDisplacement, lDisplacement);

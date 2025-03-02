@@ -197,7 +197,7 @@ const addColorPicker = () => {
     </svg>`;
 
   anchor.addEventListener("click", () => {
-    if (visible) colorSliderContainer.style.transform = "translateY(150px)";
+    if (visible) colorSliderContainer.style.transform = "translateY(200px)";
     else colorSliderContainer.style.transform = "translateY(0)";
     visible = !visible;
   });
