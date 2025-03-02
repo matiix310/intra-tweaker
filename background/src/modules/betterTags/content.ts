@@ -122,6 +122,8 @@ const run = async () => {
 
   const tags = getAllTags();
 
+  watchTags(tags);
+
   if (tags.length == 0) return;
 
   // add total number of tags
@@ -187,21 +189,18 @@ const run = async () => {
   });
 
   localStorage.setItem("running-tags", JSON.stringify(storedTags));
-
-  watchTags(processingTags);
 };
 
-const watchTags = async (processingTags: Tag[]) => {
+const watchTags = async (currentTags: Tag[]) => {
   const start = Date.now();
   const newTags = await getTagsNow();
-  console.log(newTags);
-  for (let tag of processingTags) {
-    if (newTags.filter((t) => t.name == tag.name)[0].status != "PROCESSING") {
-      const titleStr = tag.status == "ERROR" ? `Tag error` : `Tag succeded`;
-      const contentStr =
-        tag.status == "ERROR"
-          ? `Tag ${tag.name} is in error state: ${tag.errorStatus}`
-          : `Tag ${tag.name} finished running and is at ${tag.percentage}%`;
+  for (let tag of currentTags) {
+    if (newTags.filter((t) => t.name == tag.name)[0].status != tag.status) {
+      const titleStr = tag.name;
+      let contentStr = "Unknown";
+      if (tag.status == "ERROR") contentStr = `Error state: ${tag.errorStatus}`;
+      else if (tag.status == "SUCCEEDED") contentStr = `At ${tag.percentage}%`;
+      else if (tag.status == "IDLE") contentStr = `Idle state`;
       browser.runtime.sendMessage({
         action: "notify",
         title: titleStr,
@@ -219,7 +218,7 @@ const watchTags = async (processingTags: Tag[]) => {
   if (processingTime < 2000)
     await new Promise((r) => setTimeout(r, 2000 - processingTime));
 
-  watchTags(processingTags);
+  watchTags(currentTags);
 };
 
 run();
