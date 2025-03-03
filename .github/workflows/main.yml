@@ -24,11 +24,11 @@ jobs:
           bun install
           bun run build
       - name: Zip firefox
-        run: zip -qq -r firefox.zip manifest.json background/dist popup icons LICENSE
+        run: zip -qq -r firefox.xpi manifest.json background/dist popup icons LICENSE
       - uses: actions/upload-artifact@v4
         with:
           name: firefox
-          path: firefox.zip
+          path: firefox.xpi
 
   publish_firefox:
     needs: build_firefox
@@ -43,13 +43,14 @@ jobs:
         with:
           name: firefox
       - name: Publish Firefox
-        uses: maoserr/firefox_extension_publish@v1.0.4
+        uses: wdzeng/firefox-addon@v1
         with:
-          firefox_extension_id: "{9d7b266a-9484-42d3-a1ef-ec87ee4fa0e1}"
-          api_key: ${{ secrets.FIREFOX_API_KEY }}
-          api_secret: ${{ secrets.FIREFOX_API_SECRET }}
-          file: firefox.zip
-          src_file: src.zip
+          addon-guid: "{9d7b266a-9484-42d3-a1ef-ec87ee4fa0e1}"
+          jwt-issuer: ${{ secrets.FIREFOX_API_KEY }}
+          jwt-secret: ${{ secrets.FIREFOX_API_SECRET }}
+          self-hosted: true
+          xpi-path: firefox.xpi
+          source-file-path: src.zip
 
   publish_release:
     needs: build_firefox
@@ -63,4 +64,4 @@ jobs:
         with:
           tag_name: v${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
           files: |
-            firefox/firefox.zip
+            firefox.xpi
