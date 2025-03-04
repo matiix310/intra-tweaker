@@ -91,7 +91,7 @@ const tagFromElement = (element: HTMLAnchorElement): Tag | undefined => {
 };
 
 export const getAllTags = (doc = document) => {
-  const tagsTitle = Array.from(document.getElementsByClassName("title")).find((t) =>
+  const tagsTitle = Array.from(doc.getElementsByClassName("title")).find((t) =>
     t.textContent?.includes("Tags")
   );
   if (!tagsTitle) return [];

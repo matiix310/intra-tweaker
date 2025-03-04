@@ -92,10 +92,9 @@ const getRunningPipelines = async (date: Date) => {
 const getTagStat = async (tag: Tag, rank: number, endingPipelines: number) => {
   const runningTags = await getRunningPipelines(new Date());
 
-  // TODO change 10 to running tags
   if (rank <= runningTags) rank = 1;
   const remaining = (rank * 60) / endingPipelines;
-  const totalTime = remaining + (Date.now() - tag.date.getTime());
+  const totalTime = remaining + (Date.now() - tag.date.getTime()) / 1000;
   const percentage = 100 - (remaining * 100) / totalTime;
 
   return {
@@ -106,7 +105,7 @@ const getTagStat = async (tag: Tag, rank: number, endingPipelines: number) => {
 };
 
 const getTagsNow = async () => {
-  const response = await fetch(location.href);
+  const response = await fetch(location.href, { cache: "reload" });
   const html = await response.text();
 
   const parser = new DOMParser();
