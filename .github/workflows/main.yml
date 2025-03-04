@@ -16,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Replace version
+        uses: frabert/replace-string-action@v2
+        with:
+          pattern: "EXT_VERSION"
+          string: "EXT_VERSION"
+          replace-with: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
       - name: Use Bun
         uses: oven-sh/setup-bun@v2
       - name: install and build
