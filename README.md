@@ -10,6 +10,7 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
     - Progress bar and ETA when a tag is running (with live data from Grafana)
     - Notification when a tag has finished running
     - Reason for why the tag was rejected
+    - Auto reload when a tag is updated
 - **Graph**:
     - Display the validated number of nodes (required and optional) recursively
     - No more zoom triggered with the mouse wheel
@@ -18,6 +19,8 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
     - Images are blocked to speed up the loading time
 - **Visuals**:
     - Customize the theme of the intranet with a new button in the left toolbar
+        - Custom: choose your own color tint
+        - Chroma: rotate along the hue spectre
 
 ## Installation
 
