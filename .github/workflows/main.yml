@@ -61,5 +61,3 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
-          files: |
-            firefox/firefox.xpi
