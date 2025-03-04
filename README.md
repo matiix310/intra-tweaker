@@ -21,6 +21,7 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
     - Customize the theme of the intranet with a new button in the left toolbar
         - Custom: choose your own color tint
         - Chroma: rotate along the hue spectre
+    - Hide the subject by default behind a "Show subject" button
 
 ## Installation
 
