@@ -45,21 +45,21 @@ You can download the extension in the xpi format from the [releases](https://git
 
 To build this project you need a node environement (I will use bun in the examples) and [web-ext](https://github.com/mozilla/web-ext) to build and run the final extension.
 
-```bash
+```
   git clone git@github.com:matiix310/intra-tweaker.git
 ```
 
 Build the background main script and the modules
 
-```bash
-  cd background
-  bun install
+```
+  cd background && \
+  bun install && \
   bun run build
 ```
 
 Now go back to the root of the repository and run the extension with web-ext
 
-```bash
+```
   web-ext run
 ```
 ## Contributing
