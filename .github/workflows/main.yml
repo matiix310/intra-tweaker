@@ -16,12 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Replace version
-        uses: frabert/replace-string-action@v2
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v3
         with:
-          pattern: "EXT_VERSION"
-          string: "EXT_VERSION"
-          replace-with: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
+          find: "EXT_VERSION"
+          replace: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
+          regex: false
       - name: Use Bun
         uses: oven-sh/setup-bun@v2
       - name: install and build
