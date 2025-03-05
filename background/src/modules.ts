@@ -94,6 +94,20 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "ongoingTenants",
+    name: "Ongoing Tenants",
+    author: "Matiix310",
+    children: [
+      {
+        kind: "content",
+        name: "index",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/"],
+        },
+      },
+    ],
+  },
 ];
 
 export default modules;
