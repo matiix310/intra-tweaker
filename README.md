@@ -29,11 +29,14 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
     - Display sub nodes as little bubbles below the main nodes
 - **Speed**:
     - Images are blocked to speed up the loading time
-- **Visuals**:
+- **Hide Subject**:
+    - Hide the subject by default behind a "Show subject" button
+- **Custom Theme**:
     - Customize the theme of the intranet with a new button in the left toolbar
         - Custom: choose your own color tint
         - Chroma: rotate along the hue spectre
-    - Hide the subject by default behind a "Show subject" button
+- **Ongoing Tenants**:
+    - Change visibility of tenants without any ongoing activity
 
 ## Installation
 
