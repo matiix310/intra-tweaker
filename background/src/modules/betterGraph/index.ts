@@ -1,4 +1,4 @@
-import { getGraph, getStats, getSubNodesStats, type Graph } from "../../common/graph";
+import { getGraph, getStats, getSubNodes, type Graph } from "../../common/graph";
 
 const removeWheelListener = () => {
   document.getElementById("graph")?.addEventListener(
@@ -53,6 +53,14 @@ const addGraphStats = (graph?: Graph) => {
       
     #graph {
       position: relative;
+    }
+      
+    .subnode-button {
+      transition: .3s opacity;
+    }
+      
+    a:has(> .subnode-button):hover > .subnode-button:not(:hover) {
+      opacity: .35;
     }`;
 
   var style = document.createElement("style");
@@ -93,10 +101,10 @@ const addSubNodesToGraph = (
     anchor: HTMLAnchorElement;
   }[]
 ) => {
-  const stats = getSubNodesStats(root);
+  const subNodes = getSubNodes(root);
   const node = nodes.find((n) => n.name == root.name);
 
-  if (node && stats.required + stats.optional <= 6) {
+  if (node && subNodes.length <= 6) {
     let nodesStr = "";
 
     const nodeHeight = parseFloat(
@@ -109,23 +117,23 @@ const addSubNodesToGraph = (
     let x = -nodeWidth / 2 + radius;
     const y = nodeHeight / 2;
 
-    for (let i = 0; i < stats.requiredValidated; i++) {
-      nodesStr += `<circle fill="var(--required-validated)" stroke="var(--background)" r="${radius}" cy="${y}" cx="${x}"></circle>`;
-      x += radius * 2.5;
-    }
+    subNodes.sort((a, b) => {
+      if (a.validated == b.validated) return +b.required - +a.required;
+      return +b.validated - +a.validated;
+    });
 
-    for (let i = 0; i < stats.required - stats.requiredValidated; i++) {
-      nodesStr += `<circle fill="var(--background)" stroke-width="2px" stroke="var(--required)" r="${radius}" cy="${y}" cx="${x}"></circle>`;
-      x += radius * 2.5;
-    }
-
-    for (let i = 0; i < stats.optionalValidated; i++) {
-      nodesStr += `<circle fill="var(--trivial)" stroke="var(--background)" r="${radius}" cy="${y}" cx="${x}"></circle>`;
-      x += radius * 2.5;
-    }
-
-    for (let i = 0; i < stats.optional - stats.optionalValidated; i++) {
-      nodesStr += `<circle fill="var(--background)" stroke="#81B1DB" r="${radius}" cy="${y}" cx="${x}"></circle>`;
+    for (let i = 0; i < subNodes.length; i++) {
+      nodesStr += `<a class="subnode-button" title="${subNodes[i].name}" href="/${subNodes[i].link}"><circle `;
+      if (subNodes[i].validated) {
+        if (subNodes[i].required)
+          nodesStr += `fill="var(--required-validated)" stroke="var(--background)"`;
+        else nodesStr += `fill="var(--trivial)" stroke="var(--background)"`;
+      } else {
+        if (subNodes[i].required)
+          nodesStr += `fill="var(--background)" stroke-width="2px" stroke="var(--required)"`;
+        else nodesStr += `fill="var(--background)" stroke="#81B1DB"`;
+      }
+      nodesStr += ` r="${radius}" cy="${y}" cx="${x}"></circle></a>`;
       x += radius * 2.5;
     }
 

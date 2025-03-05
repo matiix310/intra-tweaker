@@ -1,9 +1,12 @@
-export type Graph = {
+export type Node = {
   name: string;
   validated: boolean;
   accessible: boolean;
   required: boolean;
   link: string;
+};
+
+export type Graph = Node & {
   children: Graph[];
   subNodes: Graph[];
 };
@@ -160,21 +163,12 @@ export const getStats = (
   return stats;
 };
 
-export const getSubNodesStats = (graph: Graph) => {
-  const stats = { required: 0, requiredValidated: 0, optional: 0, optionalValidated: 0 };
-
+export const getSubNodes = (graph: Graph, nodes: Node[] = []) => {
   if (graph.name != "_root" && graph.name != "Tutorials") {
-    if (graph.subNodes.length > 0) {
-      // take its subNodes instead
-      graph.subNodes.forEach((node) => {
-        const childStats = getStats(node, []);
-        stats.required += childStats.required;
-        stats.requiredValidated += childStats.requiredValidated;
-        stats.optional += childStats.optional;
-        stats.optionalValidated += childStats.optionalValidated;
-      });
-    }
+    if (graph.subNodes.length > 0)
+      graph.subNodes.forEach((node) => getSubNodes(node, nodes));
+    else nodes.push(graph);
   }
 
-  return stats;
+  return nodes;
 };
