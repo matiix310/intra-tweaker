@@ -1,7 +1,19 @@
 
-# Intra tweaker
+<h1 align="center">
+  Intra Tweaker
+</h1>
 
-Intra tweaker is a firefox extension made to improve the intranet of the EPITA school.
+
+<div align="center">
+    
+[![Made with Typescript](https://badgen.net/badge/Made%20with/typescript)](https://www.typescriptlang.org/)
+[![Downloads](https://badgen.net/badge/Download/latest/green?icon=github)](https://github.com/matiix310/intra-tweaker/releases)
+
+</div>
+
+## Short description
+Intra tweaker is a firefox extension made to improve the intranet of the EPITA school. It is composed of modules to make it easy to contribute and add completely independent features.
+
 ## Modules
 
 - **Grafana**:
