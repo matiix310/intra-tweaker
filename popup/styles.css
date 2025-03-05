@@ -53,7 +53,7 @@ body {
 
 #list {
   width: 90%;
-  height: 100%;
+  height: calc(100% + 40px);
 }
 
 #moduleSearch {
