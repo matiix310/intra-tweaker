@@ -66,17 +66,10 @@ const modules: Module[] = [
     ],
   },
   {
-    folder: "visuals",
-    name: "Visuals",
+    folder: "customTheme",
+    name: "Custom Theme",
     author: "Matiix310",
     children: [
-      {
-        kind: "content",
-        name: "hideSubject",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
-      },
       {
         kind: "content",
         name: "changeTheme",
@@ -88,6 +81,20 @@ const modules: Module[] = [
         kind: "content",
         name: "applyTheme",
         loadingStatus: "loading",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/*"],
+        },
+      },
+    ],
+  },
+  {
+    folder: "hideSubject",
+    name: "Hide Subject",
+    author: "Matiix310",
+    children: [
+      {
+        kind: "content",
+        name: "index",
         filter: {
           urls: ["*://intra.forge.epita.fr/*"],
         },
