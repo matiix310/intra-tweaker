@@ -115,6 +115,20 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "winwheel",
+    name: "Winwheel",
+    author: "Matiix310",
+    children: [
+      {
+        kind: "content",
+        name: "index",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/*"],
+        },
+      },
+    ],
+  },
 ];
 
 export default modules;

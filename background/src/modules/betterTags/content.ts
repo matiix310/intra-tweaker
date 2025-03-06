@@ -142,7 +142,6 @@ const run = async () => {
 
   // get all the running tag
   const processingTags = tags.filter((t) => t.status == "PROCESSING");
-  processingTags[0].date = new Date();
 
   let lastTime = Date.now();
 
@@ -197,7 +196,7 @@ const watchTags = async (currentTags: Tag[]) => {
     const tagFilter = currentTags.filter((t) => t.name == newTag.name);
     if (tagFilter.length == 0 || tagFilter[0].status != newTag.status) {
       const titleStr = newTag.name;
-      let contentStr = "Unknown";
+      let contentStr = "";
 
       if (newTag.status == "ERROR") contentStr = `Error state: ${newTag.errorStatus}`;
       else if (newTag.status == "SUCCEEDED") contentStr = `At ${newTag.percentage}%`;
