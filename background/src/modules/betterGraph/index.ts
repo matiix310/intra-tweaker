@@ -104,37 +104,93 @@ const addSubNodesToGraph = (
   const subNodes = getSubNodes(root);
   const node = nodes.find((n) => n.name == root.name);
 
-  if (node && subNodes.length <= 6) {
+  const nodeHeight = parseFloat(
+    node?.anchor.firstElementChild?.getAttribute("height") ?? "33"
+  );
+  const nodeWidth = parseFloat(
+    node?.anchor.firstElementChild?.getAttribute("width") ?? "63"
+  );
+  const radius = nodeHeight / 6;
+
+  let x = -nodeWidth / 2 + radius;
+  const y = nodeHeight / 2;
+
+  const maxNodes = (node?.anchor.getBoundingClientRect().width ?? 0) / (radius * 2.5);
+
+  if (node) {
     let nodesStr = "";
+    if (subNodes.length <= maxNodes) {
+      subNodes.sort((a, b) => {
+        if (a.validated == b.validated) return +b.required - +a.required;
+        return +b.validated - +a.validated;
+      });
 
-    const nodeHeight = parseFloat(
-      node.anchor.firstElementChild?.getAttribute("height") ?? "33"
-    );
-    const nodeWidth = parseFloat(
-      node.anchor.firstElementChild?.getAttribute("width") ?? "63"
-    );
-    const radius = nodeHeight / 6;
-    let x = -nodeWidth / 2 + radius;
-    const y = nodeHeight / 2;
-
-    subNodes.sort((a, b) => {
-      if (a.validated == b.validated) return +b.required - +a.required;
-      return +b.validated - +a.validated;
-    });
-
-    for (let i = 0; i < subNodes.length; i++) {
-      nodesStr += `<a class="subnode-button" title="${subNodes[i].name}" href="/${subNodes[i].link}"><circle `;
-      if (subNodes[i].validated) {
-        if (subNodes[i].required)
-          nodesStr += `fill="var(--required-validated)" stroke="var(--background)"`;
-        else nodesStr += `fill="var(--trivial)" stroke="var(--background)"`;
-      } else {
-        if (subNodes[i].required)
-          nodesStr += `fill="var(--background)" stroke-width="2px" stroke="var(--required)"`;
-        else nodesStr += `fill="var(--background)" stroke="#81B1DB"`;
+      for (let i = 0; i < subNodes.length; i++) {
+        nodesStr += `<a class="subnode-button" title="${subNodes[i].name}" href="/${subNodes[i].link}"><circle `;
+        if (subNodes[i].validated) {
+          if (subNodes[i].required)
+            nodesStr += `fill="var(--required-validated)" stroke="var(--background)"`;
+          else nodesStr += `fill="var(--trivial)" stroke="var(--background)"`;
+        } else {
+          if (subNodes[i].required)
+            nodesStr += `fill="var(--background)" stroke-width="2px" stroke="var(--required)"`;
+          else nodesStr += `fill="var(--background)" stroke="#81B1DB"`;
+        }
+        nodesStr += ` r="${radius}" cy="${y}" cx="${x}"></circle></a>`;
+        x += radius * 2.5;
       }
-      nodesStr += ` r="${radius}" cy="${y}" cx="${x}"></circle></a>`;
-      x += radius * 2.5;
+    } else {
+      // compact nodes
+      let requiredValidated = 0;
+      let requiredNValidated = 0;
+      let optionalValidated = 0;
+      let optionalNValidated = 0;
+
+      subNodes.forEach((n) => {
+        if (n.required) {
+          if (n.validated) requiredValidated++;
+          else requiredNValidated++;
+        } else {
+          if (n.validated) optionalValidated++;
+          else optionalNValidated++;
+        }
+      });
+
+      if (requiredValidated > 0) {
+        nodesStr += `<a class="subnode-button"><rect style="fill: var(--required-validated); stroke: var(--background)" width="${
+          radius * 3
+        }" height="${radius * 2}" x="${x - radius}" y="${
+          y - radius
+        }" rx="5" ry="5"></rect></a>`;
+        x += radius * 3.5;
+      }
+
+      if (requiredNValidated > 0) {
+        nodesStr += `<a class="subnode-button"><rect style="fill: var(--background); stroke: var(--required)" width="${
+          radius * 3
+        }" height="${radius * 2}" x="${x - radius}" y="${
+          y - radius
+        }" rx="5" ry="5"></rect></a>`;
+        x += radius * 3.5;
+      }
+
+      if (optionalValidated > 0) {
+        nodesStr += `<a class="subnode-button"><rect style="fill: var(--trivial); stroke: var(--background)" width="${
+          radius * 3
+        }" height="${radius * 2}" x="${x - radius}" y="${
+          y - radius
+        }" rx="5" ry="5"></rect></a>`;
+        x += radius * 3.5;
+      }
+
+      if (optionalNValidated > 0) {
+        nodesStr += `<a class="subnode-button"><rect style="fill: var(--background); stroke: #81B1DB" width="${
+          radius * 3
+        }" height="${radius * 2}" x="${x - radius}" y="${
+          y - radius
+        }" rx="5" ry="5"></rect></a>`;
+        x += radius * 3.5;
+      }
     }
 
     if (nodesStr.length > 0) node.anchor.insertAdjacentHTML("beforeend", nodesStr);

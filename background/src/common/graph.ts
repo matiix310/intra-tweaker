@@ -163,11 +163,22 @@ export const getStats = (
   return stats;
 };
 
-export const getSubNodes = (graph: Graph, nodes: Node[] = []) => {
+export const getSubNodes = (
+  graph: Graph,
+  nodes: Node[] = [],
+  done: string[] = [],
+  root = true
+) => {
+  if (done.includes(graph.name)) return nodes;
+  done.push(graph.name);
+
   if (graph.name != "_root" && graph.name != "Tutorials") {
     if (graph.subNodes.length > 0)
-      graph.subNodes.forEach((node) => getSubNodes(node, nodes));
-    else nodes.push(graph);
+      graph.subNodes.forEach((node) => getSubNodes(node, nodes, done, false));
+    else if (!root) {
+      nodes.push(graph);
+      graph.children.forEach((node) => getSubNodes(node, nodes, done, false));
+    }
   }
 
   return nodes;
