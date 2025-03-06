@@ -37,6 +37,8 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
         - Chroma: rotate along the hue spectre
 - **Ongoing Tenants**:
     - Change visibility of tenants without any ongoing activity
+- **Winwheel**:
+    - Hide the percentage of each tag behind a "Turn the wheel" button. When clicked, a winwheel will give you your tag percentage.
 
 ## Installation
 
