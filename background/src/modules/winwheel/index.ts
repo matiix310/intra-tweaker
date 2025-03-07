@@ -173,23 +173,26 @@ const turnWheel = async (percentage: number) => {
 
 const tags = getAllTags();
 
-tags.forEach((t) => {
-  if (t.status == "SUCCEEDED" && t.percentage) {
-    const tracePercentage = t.element
-      .getElementsByTagName("trace-symbol")
-      .item(0) as HTMLElement;
-    tracePercentage.style.display = "none";
-    const button = document.createElement("button");
-    button.classList.add("button__big");
-    button.innerText = "Turn the wheel";
-    button.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (canvas.style.opacity == "1") return;
-      turnWheel(t.percentage!).then(() => {
-        button.remove();
-        tracePercentage.style.display = "inherit";
-      });
+if (tags.length > 0 && tags[0].status == "SUCCEEDED") {
+  const tracePercentage = tags[0].element
+    .getElementsByTagName("trace-symbol")
+    .item(0) as HTMLElement;
+  tracePercentage.style.display = "none";
+  const button = document.createElement("button");
+  button.classList.add("button__big");
+  button.innerText = "Turn the wheel";
+  button.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (
+      canvas.style.opacity == "1" ||
+      tags[0].status != "SUCCEEDED" ||
+      !tags[0].percentage
+    )
+      return;
+    turnWheel(tags[0].percentage).then(() => {
+      button.remove();
+      tracePercentage.style.display = "inherit";
     });
-    t.element.getElementsByClassName("list__item__right").item(0)?.prepend(button);
-  }
-});
+  });
+  tags[0].element.getElementsByClassName("list__item__right").item(0)?.prepend(button);
+}
