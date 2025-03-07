@@ -5,6 +5,7 @@ const modules: Module[] = [
     folder: "grafanaStats",
     name: "Grafana",
     author: "Matiix310",
+    default: true,
     children: [
       {
         kind: "content",
@@ -19,6 +20,7 @@ const modules: Module[] = [
     folder: "betterTags",
     name: "Tags",
     author: "Matiix310",
+    default: true,
     children: [
       {
         kind: "content",
@@ -37,6 +39,7 @@ const modules: Module[] = [
     folder: "speedBoost",
     name: "Speed",
     author: "Matiix310",
+    default: true,
     children: [
       {
         kind: "background",
@@ -55,6 +58,7 @@ const modules: Module[] = [
     folder: "betterGraph",
     name: "Graph",
     author: "Matiix310",
+    default: true,
     children: [
       {
         kind: "content",
@@ -69,6 +73,7 @@ const modules: Module[] = [
     folder: "customTheme",
     name: "Custom Theme",
     author: "Matiix310",
+    default: true,
     children: [
       {
         kind: "content",
@@ -91,6 +96,7 @@ const modules: Module[] = [
     folder: "hideSubject",
     name: "Hide Subject",
     author: "Matiix310",
+    default: true,
     children: [
       {
         kind: "content",
@@ -105,6 +111,7 @@ const modules: Module[] = [
     folder: "ongoingTenants",
     name: "Ongoing Tenants",
     author: "Matiix310",
+    default: true,
     children: [
       {
         kind: "content",

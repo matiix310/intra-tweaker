@@ -1,16 +1,16 @@
 import modules from "./modules";
-import type { BackgroundScriptConfig } from "./types/global";
+import type { BackgroundScriptConfig, Module } from "./types/global";
 const backgroundScriptConfigs: { name: string; config: BackgroundScriptConfig }[] = [];
 
 const initModules = () => {
-  const disabledModules = getDisabledModules();
+  const modulesState = getModulesState() ?? initModulesState(modules);
 
   for (let module of modules) {
     for (let subModule of module.children) {
       if (subModule.kind == "background") {
         import("./modules/" + module.folder + "/" + subModule.name + ".js").then(
           (backgroundScript) => {
-            if (!disabledModules.includes(module.name)) backgroundScript.default.start();
+            if (modulesState.get(module.name)) backgroundScript.default.start();
             backgroundScriptConfigs.push({
               name: module.name,
               config: backgroundScript.default,
@@ -21,7 +21,7 @@ const initModules = () => {
         if (!subModule.loadingStatus) subModule.loadingStatus = "complete";
         browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
           if (
-            !getDisabledModules().includes(module.name) &&
+            getModulesState()?.get(module.name) &&
             changeInfo.status &&
             subModule.loadingStatus == changeInfo.status
           )
@@ -47,12 +47,26 @@ const sendScript = (file: string) => {
   executing.then(onExecuted, onError);
 };
 
-const getDisabledModules = (): string[] => {
-  const storage = localStorage.getItem("disabledModules");
-  if (!storage) return [];
-  const list = JSON.parse(storage);
-  if (!list) return [];
-  return list;
+const getModulesState = () => {
+  const storage = localStorage.getItem("modulesState");
+  if (!storage) return;
+  return new Map(JSON.parse(storage)) as Map<string, boolean>;
+};
+
+const setModulesState = (moduleName: string, state: boolean) => {
+  const modulesState = getModulesState();
+  if (!modulesState) return;
+
+  modulesState.set(moduleName, state);
+
+  localStorage.setItem("modulesState", JSON.stringify([...modulesState.entries()]));
+};
+
+const initModulesState = (modules: Module[]) => {
+  const modulesState = new Map<string, boolean>();
+  modules.forEach((m) => modulesState.set(m.name, m.default ?? false));
+  localStorage.setItem("modulesState", JSON.stringify([...modulesState.entries()]));
+  return modulesState;
 };
 
 const reloadTabsForModule = async (name: string) => {
@@ -84,33 +98,25 @@ const init = async () => {
 
     if (message.action == "fetchModules") {
       const formattedModules = [];
-      const disabledModules = getDisabledModules();
       for (let module of modules) {
-        const active = !disabledModules.includes(module.name);
+        const active = getModulesState()?.get(module.name) ?? false;
         formattedModules.push({ name: module.name, author: module.author, active });
       }
       return formattedModules;
     } else if (message.action == "toggleModule") {
       // get module state
-      const disabeledModules = getDisabledModules();
-      if (disabeledModules.includes(message.name)) {
+      if (!getModulesState()?.get(message.name)) {
         // enable Module
         backgroundScriptConfigs
           .filter((c) => c.name == message.name)
           .forEach((c) => c.config.start());
-        // remove from disabeledModules
-        localStorage.setItem(
-          "disabledModules",
-          JSON.stringify(disabeledModules.filter((m) => m != message.name))
-        );
+        setModulesState(message.name, true);
       } else {
         // disable Module
         backgroundScriptConfigs
           .filter((c) => c.name == message.name)
           .forEach((c) => c.config.stop());
-        // add to disabeledModules
-        disabeledModules.push(message.name);
-        localStorage.setItem("disabledModules", JSON.stringify(disabeledModules));
+        setModulesState(message.name, false);
       }
       reloadTabsForModule(message.name);
     }

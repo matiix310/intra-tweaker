@@ -3,18 +3,19 @@ export type BackgroundScriptConfig = {
   stop: () => void;
 };
 
-export type SubModule =
+export type SubModule = (
   | {
       kind: "content";
       filter: browser.tabs.UpdateFilter;
-      name: string;
       loadingStatus?: "complete" | "loading";
     }
-  | { kind: "background"; name: string };
+  | { kind: "background" }
+) & { name: string };
 
 export type Module = {
   folder: string;
   name: string;
   author: string;
+  default?: boolean;
   children: SubModule[];
 };
