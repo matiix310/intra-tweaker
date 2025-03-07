@@ -197,17 +197,19 @@ const watchTags = async (currentTags: Tag[]) => {
 
       if (newTag.status == "ERROR") contentStr = `Error state: ${newTag.errorStatus}`;
       else if (newTag.status == "SUCCEEDED") contentStr = `At ${newTag.percentage}%`;
-      else if (newTag.status == "IDLE") contentStr = `Idle state`;
+      else if (newTag.status == "PROCESSING") contentStr = `Processing`;
 
-      try {
-        browser.runtime.sendMessage({
-          action: "notify",
-          title: titleStr,
-          content: contentStr,
-        });
-      } catch (error) {
-        console.error("Error while send a notification for a tag update:");
-        console.error(error);
+      if (contentStr != "") {
+        try {
+          browser.runtime.sendMessage({
+            action: "notify",
+            title: titleStr,
+            content: contentStr,
+          });
+        } catch (error) {
+          console.error("Error while send a notification for a tag update:");
+          console.error(error);
+        }
       }
 
       window.location.reload();
