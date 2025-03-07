@@ -90,9 +90,7 @@ const getRunningPipelines = async (date: Date) => {
 };
 
 const getTagStat = async (tag: Tag, rank: number, endingPipelines: number) => {
-  const runningTags = await getRunningPipelines(new Date());
-
-  if (rank <= runningTags) rank = 1;
+  if (rank <= 0) return { remaining: 0, percentage: 100 };
   const remaining = (rank * 60) / endingPipelines;
   const totalTime = remaining + (Date.now() - tag.date.getTime()) / 1000;
   const percentage = 100 - (remaining * 100) / totalTime;
@@ -156,10 +154,9 @@ const run = async () => {
 
   processingTags.forEach(async (tag) => {
     const toRunPipelines = await getToRunPipelines(tag.date);
-    const runningPipelines = await getRunningPipelines(tag.date);
 
     if (!storedTags[tag.name]) {
-      storedTags[tag.name] = runningPipelines + toRunPipelines;
+      storedTags[tag.name] = toRunPipelines;
     }
 
     tag.element.classList.add("loading");
