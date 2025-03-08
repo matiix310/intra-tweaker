@@ -136,6 +136,21 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "tagHistory",
+    name: "Tag History",
+    author: "Matiix310",
+    default: true,
+    children: [
+      {
+        kind: "content",
+        name: "index",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/*"],
+        },
+      },
+    ],
+  },
 ];
 
 export default modules;

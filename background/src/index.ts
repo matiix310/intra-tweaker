@@ -3,7 +3,7 @@ import type { BackgroundScriptConfig, Module } from "./types/global";
 const backgroundScriptConfigs: { name: string; config: BackgroundScriptConfig }[] = [];
 
 const initModules = () => {
-  const modulesState = getModulesState() ?? initModulesState(modules);
+  const modulesState = initModulesState(modules);
 
   for (let module of modules) {
     for (let subModule of module.children) {
@@ -63,8 +63,10 @@ const setModulesState = (moduleName: string, state: boolean) => {
 };
 
 const initModulesState = (modules: Module[]) => {
-  const modulesState = new Map<string, boolean>();
-  modules.forEach((m) => modulesState.set(m.name, m.default ?? false));
+  const modulesState = getModulesState() ?? new Map<string, boolean>();
+  modules.forEach((m) => {
+    if (!modulesState.has(m.name)) modulesState.set(m.name, m.default ?? false);
+  });
   localStorage.setItem("modulesState", JSON.stringify([...modulesState.entries()]));
   return modulesState;
 };
