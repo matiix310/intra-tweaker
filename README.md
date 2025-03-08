@@ -38,7 +38,9 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
 - **Ongoing Tenants**:
     - Change visibility of tenants without any ongoing activity
 - **Winwheel**:
-    - Hide the percentage of each tag behind a "Turn the wheel" button. When clicked, a winwheel will give you your tag percentage.
+    - Hide the percentage of the last tag behind a "Turn the wheel" button. When clicked, a winwheel will give you your tag percentage
+- **Tag History**:
+    - Add a new section named "Tag history" to the tenants page containing the last 12 tags
 
 ## Installation
 
