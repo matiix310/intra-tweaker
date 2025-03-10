@@ -77,15 +77,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        name: "changeTheme",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
-      },
-      {
-        kind: "content",
-        name: "applyTheme",
-        loadingStatus: "loading",
+        name: "index",
         filter: {
           urls: ["*://intra.forge.epita.fr/*"],
         },

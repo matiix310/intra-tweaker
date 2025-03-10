@@ -1,214 +1,92 @@
-import { editTheme, getCurrentDisplacement } from "./common";
-
-let visible = false;
-
-const addCustomCss = () => {
-  const customStyles = `
-    .color-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 10px;
-      background: var(--border);
-      outline: none;
-      opacity: 0.7;
-      -webkit-transition: .2s;
-      transition: opacity .2s;
-    }
-
-    .color-slider:hover {
-      opacity: 1;
-    }
-
-    .color-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 10px;
-      height: 10px;
-      background: var(--ansi-yellow);
-      cursor: pointer;
-      border-radius: 0;
-      outline: none;
-      border: none;
-    }
-
-    .color-slider::-moz-range-thumb {
-      width: 10px;
-      height: 10px;
-      background: var(--ansi-yellow);
-      cursor: pointer;
-      border-radius: 0;
-      outline: none;
-      border: none;
-    }
-
-    .style-button {
-      background: var(--card-separator);
-      padding: 7px 12px;
-      font-size: 15px;
-      border-radius: 3px;
-      cursor: pointer;
-      margin: 9px 7px;
-      opacity: 0.8;
-      transition: 0.1s opacity ease-in-out;
-      font-weight: 500;
-    }
-
-    .style-button:hover {
-      opacity: 1;
-    }
-
-    .style-button.selected {
-      color: var(--background);
-      background: var(--ansi-yellow);
-    }
-
-    #colorSwitcherContainer.disabled input {
-      opacity: 0.3;
-      pointer-events: none;
-    }
-
-    #colorSwitcherContainer.disabled span {
-      opacity: 0.3;
-    }`;
-
-  var style = document.createElement("style");
-  document.head.appendChild(style);
-  style.innerHTML = customStyles;
+type variable = {
+  name: string;
+  dark: [number, number, number];
+  light: [number, number, number];
 };
 
-const setupLocalstorage = () => {
-  if (!localStorage.getItem("style")) localStorage.setItem("style", "custom");
+const style = document.createElement("style");
+document.head.appendChild(style);
+
+let chromaIntervale: Timer;
+
+export const editTheme = () => {
+  const storageHDisplacement = localStorage.getItem("hDisplacement");
+  const storageSDisplacement = localStorage.getItem("sDisplacement");
+  const storageLDisplacement = localStorage.getItem("lDisplacement");
+  let hDisplacement = storageHDisplacement ? parseFloat(storageHDisplacement) : 0;
+  let sDisplacement = storageSDisplacement ? parseFloat(storageSDisplacement) : 0;
+  let lDisplacement = storageLDisplacement ? parseFloat(storageLDisplacement) : 0;
+
+  const storageStyle = localStorage.getItem("style") ?? "styleNone";
+
+  clearInterval(chromaIntervale);
+
+  if (storageStyle == "styleChroma") {
+    sDisplacement = 100;
+    lDisplacement = 0;
+    chromaIntervale = setInterval(() => {
+      hDisplacement = (hDisplacement + 5) % 360;
+      applyDisplacement(hDisplacement, sDisplacement, lDisplacement);
+    }, 50);
+  }
+
+  if (storageStyle == "styleNone") {
+    style.innerHTML = "";
+    return;
+  }
+
+  applyDisplacement(hDisplacement, sDisplacement, lDisplacement);
 };
 
-const addColorPicker = () => {
-  // color sliders
-  const main = document.getElementsByTagName("main")[0];
-  if (!main) return;
-
-  const { hDisplacement, lDisplacement, sDisplacement } = getCurrentDisplacement();
-
-  const colorSliderContainer = document.createElement("div");
-  colorSliderContainer.id = "colorSwitcherContainer";
-  colorSliderContainer.setAttribute(
-    "style",
-    `position: fixed;
-    bottom: 30px;
-    left: 80px;
-    background: var(--card-background);
-    padding: 15px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    z-index: 99;
-    transform: translateY(200px);
-    transition: 0.1s transform ease-in-out;`
-  );
-
-  const listStyle = `
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  `;
-
-  const spanStyle = `
-    width: 50px;
-    text-align: left;
-  `;
-
-  const style = localStorage.getItem("style")!;
-
-  if (style != "styleCustom") colorSliderContainer.classList.add("disabled");
-
-  colorSliderContainer.innerHTML = `
-  <div style="${listStyle}">
-    <span id="hValue" style="${spanStyle}">${hDisplacement}</span>
-    <input type="range" min="0" max="360" value="${hDisplacement}" class="color-slider" id="hSlider">
-  </div>
-  
-  <div style="${listStyle}">
-    <span id="sValue" style="${spanStyle}">${sDisplacement}</span>
-    <input type="range" min="0" max="100" value="${sDisplacement}" class="color-slider" id="sSlider">
-  </div>
-  
-  <div style="${listStyle}">
-    <span id="lValue" style="${spanStyle}">${lDisplacement}</span>
-    <input type="range" min="0" max="100" value="${lDisplacement}" class="color-slider" id="lSlider">
-  </div>
-  
-  <div style="display: flex;align-content: center;justify-content: space-around;">
-    <a id="styleCustom" class="style-button ${
-      style == "styleCustom" ? "selected" : ""
-    }">custom</a>
-    <a id="styleChroma" class="style-button ${
-      style == "styleChroma" ? "selected" : ""
-    }">chroma</a>
-  </div>`;
-
-  main.appendChild(colorSliderContainer);
-
-  document.getElementById("hSlider")?.addEventListener("input", (e) => {
-    const slider = e.target as HTMLInputElement;
-    document.getElementById("hValue")!.textContent = slider.value;
-    localStorage.setItem("hDisplacement", slider.value);
-    editTheme();
-  });
-
-  document.getElementById("sSlider")?.addEventListener("input", (e) => {
-    const slider = e.target as HTMLInputElement;
-    document.getElementById("sValue")!.textContent = slider.value;
-    localStorage.setItem("sDisplacement", slider.value);
-    editTheme();
-  });
-
-  document.getElementById("lSlider")?.addEventListener("input", (e) => {
-    const slider = e.target as HTMLInputElement;
-    document.getElementById("lValue")!.textContent = slider.value;
-    localStorage.setItem("lDisplacement", slider.value);
-    editTheme();
-  });
-
-  const styleButtons = [
-    document.getElementById("styleCustom"),
-    document.getElementById("styleChroma"),
-    document.getElementById("stylePercentage"),
+const applyDisplacement = (
+  hDisplacement: number,
+  sDisplacement: number,
+  lDisplacement: number
+) => {
+  const variables: variable[] = [
+    { name: "background", dark: [230, 15, 7.8], light: [210, 20, 98] },
+    { name: "card-background", dark: [227, 14.8, 12], light: [200, 20, 100] },
+    { name: "card-separator", dark: [224, 12.6, 17.1], light: [220, 13, 91] },
+    { name: "card-footer", dark: [227, 17, 10.4], light: [220, 13, 91] },
+    { name: "rectangle-background", dark: [228, 16.1, 6.1], light: [220, 14.3, 95.9] },
+    { name: "navigation-background", dark: [231, 21.2, 6.5], light: [210, 20, 98] },
+    { name: "tag-background", dark: [231, 17.9, 7.6], light: [220, 13, 91] },
+    { name: "border", dark: [233, 9.3, 16.9], light: [220, 13, 91] },
+    { name: "primary-text", dark: [231, 40, 90.2], light: [215, 27.9, 16.9] },
+    { name: "secondary-text", dark: [225, 16.5, 66.7], light: [215, 13.8, 34.1] },
+    { name: "breadcrumb", dark: [240, 7, 13.9], light: [220, 14.3, 95.9] },
   ];
 
-  styleButtons.forEach((button) => {
-    button?.addEventListener("click", () => {
-      const style = localStorage.getItem("style")!;
-      if (style == button.id) return;
-      if (button.id == "styleCustom") colorSliderContainer.classList.remove("disabled");
-      else colorSliderContainer.classList.add("disabled");
-      styleButtons.forEach((b) => b?.classList.remove("selected"));
-      button.classList.add("selected");
-      localStorage.setItem("style", button.id);
-      editTheme();
-    });
+  let newStyles = "body.dark {";
+
+  // dark theme
+  variables.forEach((v) => {
+    const h = (v.dark[0] + hDisplacement) % 360;
+    const s = Math.max(Math.min(v.dark[1] + sDisplacement, 100), 0);
+    const l = Math.max(Math.min(v.dark[2] + lDisplacement, 100), 0);
+    newStyles += `--${v.name}: hsl(${h}, ${s}%, ${l}%) !important;`;
   });
 
-  // color picker
-  const container = document.getElementsByClassName("theme-switcher")[0];
+  newStyles += "} body.light {";
 
-  if (!container) return;
-
-  const anchor = document.createElement("a");
-  anchor.innerHTML = `<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-    <path fill="currentColor" d="M489.478 22.522C459.449 -7.50733 411.402 -7.50733 381.372 22.522L327.32 76.5748L306.299 55.5543C294.287 43.5425 276.27 43.5425 264.258 55.5543L240.235 76.5748C228.223 88.5865 228.223 106.604 240.235 118.616L390.381 268.762C402.393 280.774 420.411 280.774 432.422 268.762L453.443 247.742C465.455 235.73 465.455 217.713 453.443 205.701L435.425 184.68L489.478 130.628C519.507 100.598 519.507 52.5513 489.478 22.522ZM87.0851 316.809C21.0205 382.874 60.0587 412.903 0 490.979L21.0205 512C99.0968 451.941 129.126 490.98 195.191 424.915L348.34 271.765L240.235 163.66L87.0851 316.809Z" fill="black"/>
-    </svg>`;
-
-  anchor.addEventListener("click", () => {
-    if (visible) colorSliderContainer.style.transform = "translateY(200px)";
-    else colorSliderContainer.style.transform = "translateY(0)";
-    visible = !visible;
+  variables.forEach((v) => {
+    const h = (v.light[0] + hDisplacement) % 360;
+    const s = Math.max(Math.min(v.light[1] + sDisplacement, 100), 0);
+    const l = Math.max(Math.min(v.light[2] - lDisplacement, 100), 0);
+    newStyles += `--${v.name}: hsl(${h}, ${s}%, ${l}%) !important;`;
   });
-  container.insertAdjacentElement("afterbegin", anchor);
+
+  newStyles += "}";
+
+  window.requestAnimationFrame(() => (style.innerHTML = newStyles));
 };
 
-const run = () => {
-  addCustomCss();
-  setupLocalstorage();
-  addColorPicker();
-  editTheme();
+export const getCurrentDisplacement = () => {
+  const storageHDisplacement = localStorage.getItem("hDisplacement");
+  const storageSDisplacement = localStorage.getItem("sDisplacement");
+  const storageLDisplacement = localStorage.getItem("lDisplacement");
+  let hDisplacement = storageHDisplacement ? parseFloat(storageHDisplacement) : 0;
+  let sDisplacement = storageSDisplacement ? parseFloat(storageSDisplacement) : 0;
+  let lDisplacement = storageLDisplacement ? parseFloat(storageLDisplacement) : 0;
+  return { hDisplacement, sDisplacement, lDisplacement };
 };
-
-run();
