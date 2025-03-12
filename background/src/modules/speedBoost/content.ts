@@ -1,5 +1,5 @@
 const customStyles = `
-.managers img {
+.managers img, .group-members img {
     border-radius: 5px !important;
 }`;
 
