@@ -143,6 +143,21 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "floatingFailures",
+    name: "Floating Failures",
+    author: "Matiix310",
+    default: false,
+    children: [
+      {
+        kind: "content",
+        name: "index",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/*"],
+        },
+      },
+    ],
+  },
 ];
 
 export default modules;
