@@ -41,6 +41,8 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
     - Hide the percentage of the last tag behind a "Turn the wheel" button. When clicked, a winwheel will give you your tag percentage
 - **Tag History**:
     - Add a new section named "Tag history" to the tenants page containing the last 12 tags
+- **Floating Failures**:
+    - Make failures float to the right so that it's always visible in a long trace
 
 ## Installation
 
