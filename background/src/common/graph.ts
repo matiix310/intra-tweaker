@@ -42,6 +42,8 @@ const strToGraph = (str: string, names: Map<string, string>) => {
   return graph;
 };
 
+const nodeBlackList = ["Tutorials", "Resources"];
+
 const buildGraph = async (
   from: string,
   links: { from: string; to: string }[],
@@ -130,7 +132,7 @@ export const getStats = (
 
   if (done.includes(graph.name)) return stats;
 
-  if (graph.name != "_root" && graph.name != "Tutorials") {
+  if (graph.name != "_root" && !nodeBlackList.includes(graph.name)) {
     if (graph.subNodes.length > 0) {
       // take its subNodes instead
       graph.subNodes.forEach((node) => {
@@ -172,7 +174,7 @@ export const getSubNodes = (
   if (done.includes(graph.name)) return nodes;
   done.push(graph.name);
 
-  if (graph.name != "_root" && graph.name != "Tutorials") {
+  if (graph.name != "_root" && !nodeBlackList.includes(graph.name)) {
     if (graph.subNodes.length > 0)
       graph.subNodes.forEach((node) => getSubNodes(node, nodes, done, false));
     else if (!root) {

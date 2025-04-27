@@ -91,6 +91,9 @@ export const elementFromTag = (tag: Tag) => {
   const tagElement = document.createElement("a");
   tagElement.classList.add("list__item");
 
+  if (tag.status !== "SUCCEEDED")
+    tagElement.classList.add("list__item__disabled");
+
   const left = document.createElement("div");
   left.classList.add("list__item__left");
   tagElement.append(left);
@@ -110,7 +113,7 @@ export const elementFromTag = (tag: Tag) => {
   // Submitted on February 11, 2025 - 23:29
   tagDate.innerText = `Submitted on ${
     months[tag.date.getMonth()]
-  } ${tag.date.getDay()}, ${tag.date.getFullYear()} - ${tag.date.getHours()}:${tag.date
+  } ${tag.date.getDay().toString().padStart(2, "0")}, ${tag.date.getFullYear()} - ${tag.date.getHours()}:${tag.date
     .getMinutes()
     .toString()
     .padStart(2, "0")}`;
@@ -118,9 +121,9 @@ export const elementFromTag = (tag: Tag) => {
 
   // right
   const traceSymbol = `<trace-symbol successpercent="${
-    tag.status != "ERROR" && tag.percentage ? tag.percentage : ""
+    tag.status != "ERROR" && tag.percentage !== undefined ? tag.percentage : ""
   }" validated="${
-    tag.status != "ERROR" && tag.percentage && tag.percentage == 100
+    tag.status != "ERROR" && tag.percentage !== undefined && tag.percentage == 100
   }" errorstatus="${tag.status == "ERROR" ? tag.errorStatus : ""}" status="${
     tag.status
   }"></trace-symbol>`;
