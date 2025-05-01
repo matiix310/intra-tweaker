@@ -26,6 +26,8 @@ jobs:
           EXT_VERSION: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
       - name: Zip firefox
         run: bun run zip:firefox
+        env:
+          EXT_VERSION: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
       - uses: actions/upload-artifact@v4
         with:
           name: firefox
