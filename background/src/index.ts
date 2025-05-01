@@ -26,7 +26,8 @@ const initModules = () => {
             subModule.loadingStatus == changeInfo.status
           )
             sendScript(
-              "background/dist/modules/" + module.folder + "/" + subModule.name + ".js"
+              "background/dist/modules/" + module.folder + "/" + subModule.name + ".js",
+              tabId
             );
         }, subModule.filter);
       }
@@ -34,14 +35,14 @@ const initModules = () => {
   }
 };
 
-const sendScript = (file: string) => {
+const sendScript = (file: string, tabId: number) => {
   function onExecuted(result: any) {}
 
   function onError(error: any) {
     console.log(`Error: ${error}`);
   }
 
-  const executing = browser.tabs.executeScript({
+  const executing = browser.tabs.executeScript(tabId, {
     file,
   });
   executing.then(onExecuted, onError);
