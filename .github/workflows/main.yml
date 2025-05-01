@@ -19,7 +19,6 @@ jobs:
       - name: Use Bun
         uses: oven-sh/setup-bun@v2
       - name: install and build
-        working-directory: background
         run: |
           bun install
           ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }} bun run build:firefox
