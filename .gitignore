@@ -1,2 +1,6 @@
 web-ext-artifacts
 .amo-upload-uuid
+node_modules
+dist
+.output
+.wxt

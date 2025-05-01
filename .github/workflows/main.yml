@@ -16,37 +16,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          find: "EXT_VERSION"
-          replace: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
-          regex: false
       - name: Use Bun
         uses: oven-sh/setup-bun@v2
       - name: install and build
         working-directory: background
         run: |
           bun install
-          bun run build
+          ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }} bun run build:firefox
       - name: Zip firefox
-        run: zip -qq -r firefox.xpi manifest.json background/dist popup icons LICENSE
+        run: bun run zip:firefox
       - uses: actions/upload-artifact@v4
         with:
           name: firefox
-          path: firefox.xpi
+          path: .output/intra-tweaker-${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}-firefox.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source
+          path: .output/intra-tweaker-${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}-source.zip
 
   publish_firefox:
     needs: build_firefox
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Zip source
-        run: zip -qq -r src.zip *
-      - name: Download extension
-        uses: actions/download-artifact@v4
-        with:
-          name: firefox
       - name: Publish Firefox
         uses: wdzeng/firefox-addon@v1
         with:
@@ -54,8 +46,8 @@ jobs:
           jwt-issuer: ${{ secrets.FIREFOX_API_KEY }}
           jwt-secret: ${{ secrets.FIREFOX_API_SECRET }}
           self-hosted: true
-          xpi-path: firefox.xpi
-          source-file-path: src.zip
+          xpi-path: .output/intra-tweaker-${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}-firefox.zip
+          source-file-path: .output/intra-tweaker-${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}-source.zip
 
   publish_release:
     needs: build_firefox
