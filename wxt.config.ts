@@ -21,7 +21,7 @@ export default defineConfig({
   srcDir: "src",
   modules: ["@wxt-dev/module-react"],
   manifestVersion: 2,
-  targetBrowsers: ["firefox"],
+  targetBrowsers: ["firefox", "chrome"],
   webExt: {
     startUrls: ["https://intra.forge.epita.fr"],
   },
