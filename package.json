@@ -11,12 +11,15 @@
     "zip:firefox": "wxt zip -b firefox",
     "postinstall": "wxt prepare"
   },
-  "dependencies": {},
+  "dependencies": {
+    "browser-extension-url-match": "^1.2.0"
+  },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/chrome": "^0.0.318",
     "@types/firefox-webext-browser": "^120.0.4",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.3",

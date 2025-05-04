@@ -7,12 +7,19 @@ export default () => {
   const [searchValue, setSearchValue] = useState<string>("");
 
   const fetchModules = () => {
-    browser.runtime.sendMessage({ action: "fetchModules" }).then(setModules);
+    if (import.meta.env.BROWSER === "firefox")
+      browser.runtime
+        .sendMessage({ action: "fetchModules" })
+        .then((m) => setModules(m ?? []));
+    else if (import.meta.env.BROWSER === "chrome")
+      chrome.runtime
+        .sendMessage({ action: "fetchModules" })
+        .then((m) => setModules(m ?? []));
   };
 
   useEffect(() => {
     fetchModules();
-  });
+  }, []);
 
   return (
     <div className="main-container">
@@ -44,8 +51,9 @@ export default () => {
             <div
               className={"module-card" + (active ? " active" : "")}
               onClick={() => {
-                browser.runtime.sendMessage({ action: "toggleModule", name });
-                fetchModules();
+                browser.runtime
+                  .sendMessage({ action: "toggleModule", name })
+                  .then(() => fetchModules());
               }}
             >
               <div className="left">

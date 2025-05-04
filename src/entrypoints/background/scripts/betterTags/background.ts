@@ -1,8 +1,9 @@
 import type { BackgroundScriptConfig } from "../../../../types/global";
+import { getItem } from "../../../../utils/localStorage";
 
 async function notify(title: string, content: string) {
   if (content.startsWith("At "))
-    if (new Map(JSON.parse(localStorage.getItem("modulesState")!)).get("Winwheel"))
+    if (new Map(JSON.parse((await getItem("modulesState"))!)).get("Winwheel"))
       content = "At *** (winwheel enabled)";
   browser.notifications.create({
     type: "basic",

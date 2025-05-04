@@ -126,7 +126,11 @@ const addSubNodesToGraph = (
       });
 
       for (let i = 0; i < subNodes.length; i++) {
-        nodesStr += `<a class="subnode-button" title="${subNodes[i].name}" href="/${subNodes[i].link}"><circle `;
+        nodesStr += `${
+          import.meta.env.BROWSER === "firefox"
+            ? `<a class="subnode-button" title="${subNodes[i].name}" href="/${subNodes[i].link}">`
+            : ""
+        }<circle `;
         if (subNodes[i].validated) {
           if (subNodes[i].required)
             nodesStr += `fill="var(--required-validated)" stroke="var(--background)"`;
@@ -136,7 +140,9 @@ const addSubNodesToGraph = (
             nodesStr += `fill="var(--background)" stroke-width="2px" stroke="var(--required)"`;
           else nodesStr += `fill="var(--background)" stroke="#81B1DB"`;
         }
-        nodesStr += ` r="${radius}" cy="${y}" cx="${x}"></circle></a>`;
+        nodesStr += ` r="${radius}" cy="${y}" cx="${x}"></circle>${
+          import.meta.env.BROWSER === "firefox" ? "</a>" : ""
+        }`;
         x += radius * 2.5;
       }
     } else {
@@ -157,38 +163,46 @@ const addSubNodesToGraph = (
       });
 
       if (requiredValidated > 0) {
-        nodesStr += `<a class="subnode-button"><rect style="fill: var(--required-validated); stroke: var(--background)" width="${
+        nodesStr += `${
+          import.meta.env.BROWSER === "firefox" ? '<a class="subnode-button">' : ""
+        }<rect style="fill: var(--required-validated); stroke: var(--background)" width="${
           radius * 3
         }" height="${radius * 2}" x="${x - radius}" y="${
           y - radius
-        }" rx="5" ry="5"></rect></a>`;
+        }" rx="5" ry="5"></rect>${import.meta.env.BROWSER === "firefox" ? "</a>" : ""}`;
         x += radius * 3.5;
       }
 
       if (requiredNValidated > 0) {
-        nodesStr += `<a class="subnode-button"><rect style="fill: var(--background); stroke: var(--required)" width="${
+        nodesStr += `${
+          import.meta.env.BROWSER === "firefox" ? '<a class="subnode-button">' : ""
+        }<rect style="fill: var(--background); stroke: var(--required)" width="${
           radius * 3
         }" height="${radius * 2}" x="${x - radius}" y="${
           y - radius
-        }" rx="5" ry="5"></rect></a>`;
+        }" rx="5" ry="5"></rect>${import.meta.env.BROWSER === "firefox" ? "</a>" : ""}`;
         x += radius * 3.5;
       }
 
       if (optionalValidated > 0) {
-        nodesStr += `<a class="subnode-button"><rect style="fill: var(--trivial); stroke: var(--background)" width="${
+        nodesStr += `${
+          import.meta.env.BROWSER === "firefox" ? '<a class="subnode-button">' : ""
+        }<rect style="fill: var(--trivial); stroke: var(--background)" width="${
           radius * 3
         }" height="${radius * 2}" x="${x - radius}" y="${
           y - radius
-        }" rx="5" ry="5"></rect></a>`;
+        }" rx="5" ry="5"></rect>${import.meta.env.BROWSER === "firefox" ? "</a>" : ""}`;
         x += radius * 3.5;
       }
 
       if (optionalNValidated > 0) {
-        nodesStr += `<a class="subnode-button"><rect style="fill: var(--background); stroke: #81B1DB" width="${
+        nodesStr += `${
+          import.meta.env.BROWSER === "firefox" ? '<a class="subnode-button">' : ""
+        }<rect style="fill: var(--background); stroke: #81B1DB" width="${
           radius * 3
         }" height="${radius * 2}" x="${x - radius}" y="${
           y - radius
-        }" rx="5" ry="5"></rect></a>`;
+        }" rx="5" ry="5"></rect>${import.meta.env.BROWSER === "firefox" ? "</a>" : ""}`;
         x += radius * 3.5;
       }
     }

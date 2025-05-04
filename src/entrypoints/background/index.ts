@@ -1,9 +1,34 @@
 import modules from "./modules";
 import type { BackgroundScriptConfig, Module, ShortModule } from "../../types/global";
+import { getItem, setItem } from "../../utils/localStorage";
+import { matchPattern } from "browser-extension-url-match";
 const backgroundScriptConfigs: { name: string; config: BackgroundScriptConfig }[] = [];
 
-const initModules = () => {
-  const modulesState = initModulesState(modules);
+const chromeCheckUrlFilter = (currentUrl: string, urls: string[]) => {
+  for (const url of urls) {
+    const matcher = matchPattern(url).assertValid();
+    if (matcher.match(currentUrl)) return true;
+  }
+
+  return false;
+};
+
+const chromeCheckFilter = (
+  filter: browser.tabs.UpdateFilter,
+  currentUrl?: string,
+  currentTabId?: number
+) => {
+  if (filter.urls && currentUrl && chromeCheckUrlFilter(currentUrl, filter.urls))
+    return true;
+  if (filter.tabId && currentTabId && filter.tabId === currentTabId) return true;
+
+  return false;
+};
+
+const initModules = async () => {
+  const modulesState = await initModulesState(modules);
+
+  alert();
 
   for (let module of modules) {
     for (let subModule of module.children) {
@@ -18,51 +43,65 @@ const initModules = () => {
           })
           .catch(console.error);
       } else if (subModule.kind == "content") {
-        browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
-          if (
-            getModulesState()?.get(module.name) &&
-            changeInfo.status &&
-            changeInfo.status === "complete"
-          )
-            sendScript(`./module_${module.folder}.js`, tabId);
-        }, subModule.filter);
+        if (import.meta.env.BROWSER === "firefox") {
+          browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
+            if (
+              (await getModulesState())?.get(module.name) &&
+              changeInfo.status &&
+              changeInfo.status === "complete"
+            )
+              sendScript(`./module_${module.folder}.js`, tabId);
+          }, subModule.filter);
+        } else if (import.meta.env.BROWSER === "chrome") {
+          chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
+            if (!chromeCheckFilter(subModule.filter, tabInfo.url, tabId)) return;
+            if (
+              (await getModulesState())?.get(module.name) &&
+              changeInfo.status &&
+              changeInfo.status === "complete"
+            )
+              sendScript(`./module_${module.folder}.js`, tabId);
+          });
+        }
       }
     }
   }
 };
 
 const sendScript = async (file: string, tabId: number) => {
-  function onExecuted(result: any) {}
-
-  function onError(error: any) {
-    console.log(`Error: ${error}`);
+  if (import.meta.env.BROWSER === "chrome") {
+    chrome.scripting.executeScript({
+      files: [file],
+      target: {
+        tabId,
+      },
+    });
+  } else if (import.meta.env.BROWSER === "firefox") {
+    browser.tabs.executeScript(tabId, { file });
   }
-
-  const executing = browser.tabs.executeScript(tabId, { file });
-  executing.then(onExecuted, onError);
 };
 
-const getModulesState = () => {
-  const storage = localStorage.getItem("modulesState");
+const getModulesState = async () => {
+  const storage = await getItem("modulesState");
   if (!storage) return;
   return new Map(JSON.parse(storage)) as Map<string, boolean>;
 };
 
-const setModulesState = (moduleName: string, state: boolean) => {
-  const modulesState = getModulesState();
+const setModulesState = async (moduleName: string, state: boolean) => {
+  const modulesState = await getModulesState();
   if (!modulesState) return;
 
   modulesState.set(moduleName, state);
 
-  localStorage.setItem("modulesState", JSON.stringify([...modulesState.entries()]));
+  setItem("modulesState", JSON.stringify([...modulesState.entries()]));
 };
 
-const initModulesState = (modules: Module[]) => {
-  const modulesState = getModulesState() ?? new Map<string, boolean>();
+const initModulesState = async (modules: Module[]) => {
+  const modulesState = (await getModulesState()) ?? new Map<string, boolean>();
   modules.forEach((m) => {
     if (!modulesState.has(m.name)) modulesState.set(m.name, m.default ?? false);
   });
-  localStorage.setItem("modulesState", JSON.stringify([...modulesState.entries()]));
+  setItem("modulesState", JSON.stringify([...modulesState.entries()]));
   return modulesState;
 };
 
@@ -90,34 +129,61 @@ const reloadTabsForModule = async (name: string) => {
 };
 
 export const init = async () => {
-  browser.runtime.onMessage.addListener(async (message: any) => {
-    if (!message.action) return;
+  // must return true when async
+  const handleMessage = (message: any, sendResponse: (_: any) => void) => {
+    if (!message.action) return null;
 
     if (message.action == "fetchModules") {
       const formattedModules: ShortModule[] = [];
       for (let module of modules) {
-        const active = getModulesState()?.get(module.name) ?? false;
-        formattedModules.push({ name: module.name, author: module.author, active });
+        getModulesState().then((m) => {
+          const active = m?.get(module.name) ?? false;
+          formattedModules.push({ name: module.name, author: module.author, active });
+          if (formattedModules.length === modules.length) sendResponse(formattedModules);
+        });
       }
-      return formattedModules;
+      return true;
     } else if (message.action == "toggleModule") {
       // get module state
-      if (!getModulesState()?.get(message.name)) {
-        // enable Module
-        backgroundScriptConfigs
-          .filter((c) => c.name == message.name)
-          .forEach((c) => c.config.start());
-        setModulesState(message.name, true);
-      } else {
-        // disable Module
-        backgroundScriptConfigs
-          .filter((c) => c.name == message.name)
-          .forEach((c) => c.config.stop());
-        setModulesState(message.name, false);
-      }
-      reloadTabsForModule(message.name);
+      getModulesState().then((m) => {
+        if (!m) {
+          sendResponse(null);
+          return;
+        }
+
+        if (!m.get(message.name)) {
+          // enable Module
+          for (let c of backgroundScriptConfigs.filter((c) => c.name == message.name)) {
+            c.config.start();
+            console.log("starting: " + message.name);
+          }
+          setModulesState(message.name, true);
+          reloadTabsForModule(message.name);
+          sendResponse(null);
+        } else {
+          // disable Module
+          for (const c of backgroundScriptConfigs.filter((c) => c.name == message.name))
+            c.config.stop();
+          setModulesState(message.name, false);
+          reloadTabsForModule(message.name);
+          sendResponse(null);
+        }
+      });
+
+      return true;
     }
-  });
+
+    return null;
+  };
+
+  if (import.meta.env.BROWSER === "firefox")
+    browser.runtime.onMessage.addListener(
+      (message) => new Promise((res) => handleMessage(message, res))
+    );
+  else if (import.meta.env.BROWSER === "chrome")
+    chrome.runtime.onMessage.addListener((message, _, sendMessage) =>
+      handleMessage(message, sendMessage)
+    );
 
   initModules();
 };

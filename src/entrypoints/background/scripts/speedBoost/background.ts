@@ -7,14 +7,49 @@ const criPPBlocker = () => {
 };
 
 const start = () => {
-  browser.webRequest.onBeforeRequest.addListener(
-    criPPBlocker,
-    {
-      urls: ["*://s3.cri.epita.fr/cri-intranet-photos/*", "*://photos.cri.epita.fr/*"],
-      types: ["image"],
-    },
-    ["blocking"]
-  );
+  if (import.meta.env.BROWSER === "firefox") {
+    browser.webRequest.onBeforeRequest.addListener(
+      criPPBlocker,
+      {
+        urls: ["*://s3.cri.epita.fr/cri-intranet-photos/*", "*://photos.cri.epita.fr/*"],
+        types: ["image"],
+      },
+      ["blocking"]
+    );
+  } else if (import.meta.env.BROWSER === "chrome") {
+    chrome.declarativeNetRequest.updateDynamicRules({
+      addRules: [
+        {
+          id: 1001,
+          priority: 1,
+          action: {
+            type: "block",
+          },
+          condition: {
+            urlFilter: "*://s3.cri.epita.fr/cri-intranet-photos/*",
+            resourceTypes: ["image"],
+          },
+        },
+      ],
+      removeRuleIds: [1001],
+    });
+    chrome.declarativeNetRequest.updateDynamicRules({
+      addRules: [
+        {
+          id: 1002,
+          priority: 1,
+          action: {
+            type: "block",
+          },
+          condition: {
+            urlFilter: "*://photos.cri.epita.fr/*",
+            resourceTypes: ["image"],
+          },
+        },
+      ],
+      removeRuleIds: [1002],
+    });
+  }
 };
 
 const stop = () => {
