@@ -49,7 +49,7 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
 You can download the extension in the xpi format from the [releases](https://github.com/matiix310/intra-tweaker/releases/) tab and firefox with add the extension automatically for you. You can also build the app yourself by following the `Build locally` steps below.
 ## Build locally
 
-To build and run this project you need a node environement (I will use bun for the examples but fell free to use `npm`, `pnpm`, `yarn`, ...).
+To build and run this project you need a node environment (I will use bun for the examples but fell free to use `npm`, `pnpm`, `yarn`, ...).
 
 ```sh
   git clone git@github.com:matiix310/intra-tweaker.git && \
@@ -64,7 +64,7 @@ To build and run for firefox, you need to use the `dev:firefox` script:
   bun run dev:firefox --mv2 # for manifest v2
 ```
 
-To test the extension in "production mode", you can bundule the output and load it into a chrome / firefox client from the extensions menu:
+To test the extension in "production mode", you can bundle the output and load it into a chrome / firefox client from the extensions menu:
 
 ```sh
   bun run zip
