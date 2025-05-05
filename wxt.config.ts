@@ -25,10 +25,9 @@ export default defineConfig({
     permissions: [
       "notifications",
       "storage",
-      "webRequest",
-      manifestVersion === 2
-        ? "webRequestBlocking"
-        : "declarativeNetRequestWithHostAccess",
+      ...(manifestVersion === 2
+        ? ["webRequest", "webRequestBlocking"]
+        : ["declarativeNetRequestWithHostAccess"]),
     ],
 
     host_permissions: [

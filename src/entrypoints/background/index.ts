@@ -28,8 +28,6 @@ const chromeCheckFilter = (
 const initModules = async () => {
   const modulesState = await initModulesState(modules);
 
-  alert();
-
   for (let module of modules) {
     for (let subModule of module.children) {
       if (subModule.kind == "background") {
