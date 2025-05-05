@@ -1,0 +1,17 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build_firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Bun
+        uses: oven-sh/setup-bun@v2
+      - name: install and build
+        run: |
+          bun install
+          bun run build:firefox --mv2
