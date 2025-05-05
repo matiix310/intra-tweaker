@@ -49,36 +49,40 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
 You can download the extension in the xpi format from the [releases](https://github.com/matiix310/intra-tweaker/releases/) tab and firefox with add the extension automatically for you. You can also build the app yourself by following the `Build locally` steps below.
 ## Build locally
 
-To build this project you need a node environement (I will use bun in the examples) and [web-ext](https://github.com/mozilla/web-ext) to build and run the final extension.
+To build and run this project you need a node environement (I will use bun for the examples but fell free to use `npm`, `pnpm`, `yarn`, ...).
 
-```
-  git clone git@github.com:matiix310/intra-tweaker.git
-```
-
-Build the background main script and the modules
-
-```
-  cd background && \
+```sh
+  git clone git@github.com:matiix310/intra-tweaker.git && \
+  cd intra-tweaker && \
   bun install && \
-  bun run build
+  bun run dev
 ```
 
-Now go back to the root of the repository and run the extension with web-ext
+To build and run for firefox, you need to use the `dev:firefox` script:
 
+```sh
+  bun run dev:firefox --mv2 # for manifest v2
 ```
-  web-ext run
+
+To test the extension in "production mode", you can bundule the output and load it into a chrome / firefox client from the extensions menu:
+
+```sh
+  bun run zip
+  bun run zip:firefox --mv2
 ```
+
 ## Contributing
 
-The extension is build from modules. Each module has its configuration in `background/src/modules.ts` and can have multiple files with different purpose. 
+The extension is built from modules. Each module has its configuration in `src/entrypoints/background/modules.ts` and can have multiple files with different purpose. 
 You can for example have a file injected directly in the page content (content-src) or have a file launched by the main background script (background).
 
-The source code of the modules are located in `background/src/modules/<moduleName>/<moduleFiles>`.
+The source code of the modules are located in `src/entrypoints/background/scripts/<moduleName>/<moduleFiles>` for the background scripts and in `src/entrypoints/module_<moduleName>.unlisted/` for the content scripts.
 
-The common scripts are in `background/src/common/*`:
+The common scripts are in `src/entrypoints/background/common/*`:
 - `grafana.ts` handle the requests to the grafana server
 - `graph.ts` handle the graph parsing
 - `tags.ts` manages the parsing of the tags.
+- `ui.ts` fetches the ui blocks from the current page (tags, tenants, subject, ...).
 
 If you want to contribute, feel free to open a pull request or to message me on discord (@matiix310).
 ## Authors
