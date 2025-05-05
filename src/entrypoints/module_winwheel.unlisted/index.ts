@@ -187,7 +187,7 @@ const run = () => {
       if (
         canvas.style.opacity == "1" ||
         tags[0].status != "SUCCEEDED" ||
-        !tags[0].percentage
+        tags[0].percentage === undefined
       )
         return;
       turnWheel(tags[0].percentage).then(() => {
