@@ -148,6 +148,20 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "testsExplorer",
+    name: "Tests Explorer",
+    author: "Matiix310",
+    default: true,
+    children: [
+      {
+        kind: "content",
+        filter: {
+          urls: ["*://intra.forge.epita.fr/*"],
+        },
+      },
+    ],
+  },
 ];
 
 export default modules;
