@@ -11,6 +11,10 @@
 
 </div>
 
+## Screenshots
+
+![screenshot of the tag page with intra tweaker opened](images/intra-tweaker.webp)
+
 ## Short description
 Intra tweaker is a firefox extension made to improve the intranet of the EPITA school. It is composed of modules to make it easy to contribute and add completely independent features.
 
