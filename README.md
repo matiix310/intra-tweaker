@@ -16,7 +16,7 @@
 ![screenshot of the tag page with intra tweaker opened](images/intra-tweaker.webp)
 
 ## Short description
-Intra tweaker is a firefox extension made to improve the intranet of the EPITA school. It is composed of modules to make it easy to contribute and add completely independent features.
+Intra tweaker is a Firefox extension made to improve the intranet of the EPITA school. It is composed of modules to make it easy to contribute and add completely independent features.
 
 ## Modules
 
@@ -38,9 +38,9 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
 - **Custom Theme**:
     - Customize the theme of the intranet with a new button in the left toolbar
         - Custom: choose your own color tint
-        - Chroma: rotate along the hue spectre
+        - Chroma: rotate along the hue spectrum
 - **Ongoing Tenants**:
-    - Change visibility of tenants without any ongoing activity
+    - Change the visibility of tenants without any ongoing activity
 - **Winwheel**:
     - Hide the percentage of the last tag behind a "Turn the wheel" button. When clicked, a winwheel will give you your tag percentage
 - **Tag History**:
@@ -50,7 +50,7 @@ Intra tweaker is a firefox extension made to improve the intranet of the EPITA s
 
 ## Installation
 
-You can download the extension in the xpi format from the [releases](https://github.com/matiix310/intra-tweaker/releases/) tab and firefox with add the extension automatically for you. You can also build the app yourself by following the `Build locally` steps below.
+You can download the extension in the xpi format from the [releases](https://github.com/matiix310/intra-tweaker/releases/) tab and Firefox with add the extension automatically for you. You can also build the app yourself by following the `Build locally` steps below.
 ## Build locally
 
 To build and run this project you need a node environment (I will use bun for the examples but fell free to use `npm`, `pnpm`, `yarn`, ...).
@@ -62,13 +62,13 @@ To build and run this project you need a node environment (I will use bun for th
   bun run dev
 ```
 
-To build and run for firefox, you need to use the `dev:firefox` script:
+To build and run for Firefox, you need to use the `dev:firefox` script:
 
 ```sh
   bun run dev:firefox --mv2 # for manifest v2
 ```
 
-To test the extension in "production mode", you can bundle the output and load it into a chrome / firefox client from the extensions menu:
+To test the extension in "production mode", you can bundle the output and load it into a chrome / Firefox client from the extensions menu:
 
 ```sh
   bun run zip
