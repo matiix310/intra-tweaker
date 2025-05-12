@@ -27,7 +27,7 @@ export default defineConfig({
       "storage",
       ...(manifestVersion === 2
         ? ["webRequest", "webRequestBlocking"]
-        : ["declarativeNetRequestWithHostAccess"]),
+        : ["declarativeNetRequestWithHostAccess", "scripting"]),
     ],
 
     host_permissions: [
