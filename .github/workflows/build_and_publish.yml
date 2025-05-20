@@ -21,11 +21,11 @@ jobs:
       - name: install and build
         run: |
           bun install
-          bun run build:firefox --mv2
+          bun run build:firefox --mv3
         env:
           EXT_VERSION: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
       - name: Zip firefox
-        run: bun run zip:firefox --mv2
+        run: bun run zip:firefox --mv3
         env:
           EXT_VERSION: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
       - uses: actions/upload-artifact@v4

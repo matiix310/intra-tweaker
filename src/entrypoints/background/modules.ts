@@ -9,9 +9,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },
@@ -23,9 +21,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
       {
         kind: "background",
@@ -45,9 +41,7 @@ const modules: Module[] = [
       },
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },
@@ -59,9 +53,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },
@@ -73,9 +65,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },
@@ -87,9 +77,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },
@@ -101,9 +89,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/"],
-        },
+        matches: ["*://intra.forge.epita.fr/"],
       },
     ],
   },
@@ -114,9 +100,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },
@@ -128,9 +112,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },
@@ -142,9 +124,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },
@@ -156,9 +136,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        filter: {
-          urls: ["*://intra.forge.epita.fr/*"],
-        },
+        matches: ["*://intra.forge.epita.fr/*"],
       },
     ],
   },

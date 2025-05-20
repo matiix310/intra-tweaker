@@ -7,7 +7,7 @@ export default defineConfig({
   webExt: {
     startUrls: ["https://intra.forge.epita.fr"],
   },
-  manifest: ({ manifestVersion }) => ({
+  manifest: ({ browser }) => ({
     version: process.env.EXT_VERSION ?? "1.0.0",
     name: "Intra tweaker",
 
@@ -25,10 +25,14 @@ export default defineConfig({
     permissions: [
       "notifications",
       "storage",
-      ...(manifestVersion === 2
+      ...(browser === "firefox"
         ? ["webRequest", "webRequestBlocking"]
-        : ["declarativeNetRequestWithHostAccess", "scripting"]),
+        : ["declarativeNetRequestWithHostAccess", "userScripts"]),
     ],
+
+    optional_permissions: ["userScripts"],
+
+    web_accessible_resources: [{ resources: ["/html/*"], extension_ids: [] }],
 
     host_permissions: [
       "*://intra.forge.epita.fr/*",

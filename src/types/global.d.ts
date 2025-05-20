@@ -6,7 +6,7 @@ export type BackgroundScriptConfig = {
 export type SubModule =
   | {
       kind: "content";
-      filter: browser.tabs.UpdateFilter;
+      matches: string[];
     }
   | { kind: "background"; name: string };
 

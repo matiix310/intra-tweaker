@@ -162,3 +162,25 @@ body {
 .module-card.active::before {
   background-color: var(--green);
 }
+
+#grantPermissionButton {
+  all: unset;
+  background-color: var(--green);
+  color: var(--primary-text);
+  padding: 10px 20px;
+  font-size: 25px;
+  border-radius: 7px;
+  opacity: 0.8;
+  transition: all ease-in-out 0.3s;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#grantPermissionButton:hover {
+  opacity: 1;
+  cursor: pointer;
+}

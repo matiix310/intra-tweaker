@@ -1,34 +1,19 @@
+import browser from "webextension-polyfill";
+
 import modules from "./modules";
 import type { BackgroundScriptConfig, Module, ShortModule } from "../../types/global";
 import { getItem, setItem } from "../../utils/localStorage";
-import { matchPattern } from "browser-extension-url-match";
 const backgroundScriptConfigs: { name: string; config: BackgroundScriptConfig }[] = [];
-
-const chromeCheckUrlFilter = (currentUrl: string, urls: string[]) => {
-  for (const url of urls) {
-    const matcher = matchPattern(url).assertValid();
-    if (matcher.match(currentUrl)) return true;
-  }
-
-  return false;
-};
-
-const chromeCheckFilter = (
-  filter: browser.tabs.UpdateFilter,
-  currentUrl?: string,
-  currentTabId?: number
-) => {
-  if (filter.urls && currentUrl && chromeCheckUrlFilter(currentUrl, filter.urls))
-    return true;
-  if (filter.tabId && currentTabId && filter.tabId === currentTabId) return true;
-
-  return false;
-};
 
 const initModules = async () => {
   const modulesState = await initModulesState(modules);
 
+  browser.userScripts.configureWorld({
+    messaging: true,
+  });
+
   for (let module of modules) {
+    let i = 0;
     for (let subModule of module.children) {
       if (subModule.kind == "background") {
         import(`./scripts/${module.folder}/${subModule.name}.ts`)
@@ -41,42 +26,33 @@ const initModules = async () => {
           })
           .catch(console.error);
       } else if (subModule.kind == "content") {
-        if (import.meta.env.BROWSER === "firefox") {
-          browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
-            if (
-              (await getModulesState())?.get(module.name) &&
-              changeInfo.status &&
-              changeInfo.status === "complete"
-            )
-              sendScript(`./module_${module.folder}.js`, tabId);
-          }, subModule.filter);
-        } else if (import.meta.env.BROWSER === "chrome") {
-          chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
-            if (!chromeCheckFilter(subModule.filter, tabInfo.url, tabId)) return;
-            if (
-              (await getModulesState())?.get(module.name) &&
-              changeInfo.status &&
-              changeInfo.status === "complete"
-            )
-              sendScript(`./module_${module.folder}.js`, tabId);
-          });
-        }
+        if (modulesState.get(module.name))
+          registerScript(
+            `./module_${module.folder}.js`,
+            subModule.matches,
+            module.name + i++
+          );
       }
     }
   }
 };
 
-const sendScript = async (file: string, tabId: number) => {
-  if (import.meta.env.BROWSER === "chrome") {
-    chrome.scripting.executeScript({
-      files: [file],
-      target: {
-        tabId,
-      },
-    });
-  } else if (import.meta.env.BROWSER === "firefox") {
-    browser.tabs.executeScript(tabId, { file });
-  }
+const registerScript = async (file: string, matches: string[], id: string) => {
+  if (!(await browser.permissions.contains({ permissions: ["userScripts"] }))) return;
+
+  browser.userScripts.register([
+    {
+      id,
+      js: [{ file }],
+      matches,
+    },
+  ]);
+};
+
+const unregisterScript = async (id: string) => {
+  browser.userScripts.unregister({
+    ids: [id],
+  });
 };
 
 const getModulesState = async () => {
@@ -113,7 +89,7 @@ const reloadTabsForModule = async (name: string) => {
   const children = module.children.filter((c) => c.kind == "content");
 
   for (let c of children) {
-    const tabs = await browser.tabs.query({ url: c.filter.urls });
+    const tabs = await browser.tabs.query({ url: c.matches });
     for (let tab of tabs) {
       if (tab.id && !tabsToReaload.includes(tab.id)) {
         tabsToReaload.push(tab.id);
@@ -127,6 +103,18 @@ const reloadTabsForModule = async (name: string) => {
 };
 
 export const init = async () => {
+  let userScriptsPermission = await browser.permissions.contains({
+    permissions: ["userScripts"],
+  });
+  if (import.meta.env.BROWSER === "firefox") {
+    if (!userScriptsPermission) {
+      const url = browser.runtime.getURL("/html/index.html");
+      browser.tabs.create({
+        url,
+      });
+    }
+  }
+
   // must return true when async
   const handleMessage = (message: any, sendResponse: (_: any) => void) => {
     if (!message.action) return null;
@@ -149,6 +137,8 @@ export const init = async () => {
           return;
         }
 
+        const module = modules.find((m) => m.name === message.name);
+
         if (!m.get(message.name)) {
           // enable Module
           for (let c of backgroundScriptConfigs.filter((c) => c.name == message.name)) {
@@ -156,6 +146,18 @@ export const init = async () => {
             console.log("starting: " + message.name);
           }
           setModulesState(message.name, true);
+          if (module) {
+            let i = 0;
+            for (const contentChild of module.children.filter(
+              (c) => c.kind === "content"
+            ))
+              registerScript(
+                `./module_${module.folder}.js`,
+                contentChild.matches,
+                module.name + i++
+              );
+            reloadTabsForModule(message.name);
+          }
           reloadTabsForModule(message.name);
           sendResponse(null);
         } else {
@@ -163,11 +165,30 @@ export const init = async () => {
           for (const c of backgroundScriptConfigs.filter((c) => c.name == message.name))
             c.config.stop();
           setModulesState(message.name, false);
-          reloadTabsForModule(message.name);
+          if (module) {
+            for (
+              let i = 0;
+              i < module.children.filter((c) => c.kind === "content").length;
+              i++
+            )
+              unregisterScript(module.name + i);
+            reloadTabsForModule(message.name);
+          }
           sendResponse(null);
         }
       });
 
+      return true;
+    } else if (message.action === "fetchUserScriptsPermission") {
+      browser.permissions
+        .contains({
+          permissions: ["userScripts"],
+        })
+        .then(sendResponse);
+      return true;
+    } else if (message.action === "initModules") {
+      initModules();
+      sendResponse(null);
       return true;
     }
 
@@ -183,7 +204,7 @@ export const init = async () => {
       handleMessage(message, sendMessage)
     );
 
-  initModules();
+  if (userScriptsPermission) initModules();
 };
 
 export default defineBackground(() => {

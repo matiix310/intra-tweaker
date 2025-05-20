@@ -18,4 +18,4 @@ jobs:
       - name: install and build
         run: |
           bun install
-          bun run build:firefox --mv2
+          bun run build:firefox --mv3
