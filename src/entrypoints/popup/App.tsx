@@ -24,6 +24,15 @@ export default () => {
     fetchModules();
   }, []);
 
+  const getFilteredModules = () => {
+    return modules.filter((m) =>
+      m.name
+        .replaceAll(" ", "")
+        .toLowerCase()
+        .includes(searchValue.replaceAll(" ", "").toLowerCase())
+    );
+  };
+
   return (
     <>
       <div className="main-container">
@@ -40,15 +49,12 @@ export default () => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
-            <span id="resultCount">0 module found</span>
+            <span id="resultCount">
+              {getFilteredModules().length} module
+              {getFilteredModules().length < 2 ? "" : "s"} found
+            </span>
             <div id="list">
-              {modules
-                .filter((m) =>
-                  m.name
-                    .replaceAll(" ", "")
-                    .toLowerCase()
-                    .includes(searchValue.replaceAll(" ", "").toLowerCase())
-                )
+              {getFilteredModules()
                 .sort((m1, m2) => {
                   if (m1.active == m2.active) return m1.name.localeCompare(m2.name);
                   return m1.active ? -1 : 1;
@@ -77,16 +83,19 @@ export default () => {
         ) : (
           <button
             id="grantPermissionButton"
-            onClick={async () => {
-              const granted = await browser.permissions.request({
-                permissions: ["userScripts"],
-              });
-
-              if (granted) {
-                browser.runtime.sendMessage({ action: "initModules" });
-                fetchModules();
-                setUserScriptsPermission(true);
-              }
+            onClick={() => {
+              browser.permissions
+                .request({
+                  permissions: ["userScripts"],
+                })
+                .then((granted) => {
+                  if (granted) {
+                    browser.runtime.sendMessage({ action: "initModules" }).then(() => {
+                      fetchModules();
+                      setUserScriptsPermission(true);
+                    });
+                  }
+                });
             }}
           >
             Give permission

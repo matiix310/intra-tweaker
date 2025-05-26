@@ -116,8 +116,8 @@ export const init = async () => {
   }
 
   // must return true when async
-  const handleMessage = (message: any, sendResponse: (_: any) => void) => {
-    if (!message.action) return null;
+  const handleMessage = (message: any, sendResponse: (_: any) => void): void => {
+    if (!message.action) return;
 
     if (message.action == "fetchModules") {
       const formattedModules: ShortModule[] = [];
@@ -128,7 +128,7 @@ export const init = async () => {
           if (formattedModules.length === modules.length) sendResponse(formattedModules);
         });
       }
-      return true;
+      return;
     } else if (message.action == "toggleModule") {
       // get module state
       getModulesState().then((m) => {
@@ -178,21 +178,19 @@ export const init = async () => {
         }
       });
 
-      return true;
+      return;
     } else if (message.action === "fetchUserScriptsPermission") {
       browser.permissions
         .contains({
           permissions: ["userScripts"],
         })
         .then(sendResponse);
-      return true;
+      return;
     } else if (message.action === "initModules") {
       initModules();
       sendResponse(null);
-      return true;
+      return;
     }
-
-    return null;
   };
 
   if (import.meta.env.BROWSER === "firefox")

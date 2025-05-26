@@ -26,6 +26,7 @@ const blockImageChrome = (url: string, id: number) => {
 };
 
 const start = () => {
+  console.log("starting url blocker");
   if (import.meta.env.BROWSER === "firefox") {
     browser.webRequest.onBeforeRequest.addListener(
       criPPBlocker,
