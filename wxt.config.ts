@@ -25,9 +25,8 @@ export default defineConfig({
     permissions: [
       "notifications",
       "storage",
-      ...(browser === "firefox"
-        ? ["webRequest", "webRequestBlocking"]
-        : ["declarativeNetRequestWithHostAccess", "userScripts"]),
+      "declarativeNetRequestWithHostAccess",
+      ...(browser === "firefox" ? [] : ["userScripts"]),
     ],
 
     optional_permissions: ["userScripts"],
