@@ -193,14 +193,9 @@ export const init = async () => {
     }
   };
 
-  if (import.meta.env.BROWSER === "firefox")
-    browser.runtime.onMessage.addListener(
-      (message) => new Promise((res) => handleMessage(message, res))
-    );
-  else if (import.meta.env.BROWSER === "chrome")
-    chrome.runtime.onMessage.addListener((message, _, sendMessage) =>
-      handleMessage(message, sendMessage)
-    );
+  browser.runtime.onMessage.addListener(
+    (message) => new Promise((res) => handleMessage(message, res))
+  );
 
   if (userScriptsPermission) initModules();
 };

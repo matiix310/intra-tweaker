@@ -14,9 +14,10 @@ export default () => {
   };
 
   const fetchUserScriptsPermission = async () => {
-    browser.runtime
-      .sendMessage({ action: "fetchUserScriptsPermission" })
-      .then((p) => setUserScriptsPermission(p));
+    browser.runtime.sendMessage({ action: "fetchUserScriptsPermission" }).then((p) => {
+      console.log(p);
+      setUserScriptsPermission(p);
+    });
   };
 
   useEffect(() => {

@@ -31,7 +31,13 @@ export default defineConfig({
 
     optional_permissions: ["userScripts"],
 
-    web_accessible_resources: [{ resources: ["/html/*"], extension_ids: [] }],
+    web_accessible_resources: [
+      {
+        resources: ["/html/*", "/mermaid.min.js"],
+        extension_ids: [],
+        matches: ["*://intra.forge.epita.fr/*"],
+      },
+    ],
 
     host_permissions: [
       "*://intra.forge.epita.fr/*",
