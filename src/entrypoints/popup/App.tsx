@@ -7,6 +7,8 @@ export default () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [userScriptsPermission, setUserScriptsPermission] = useState<boolean>(false);
 
+  const version = browser.runtime.getManifest().version;
+
   const fetchModules = () => {
     browser.runtime
       .sendMessage({ action: "fetchModules" })
@@ -14,10 +16,9 @@ export default () => {
   };
 
   const fetchUserScriptsPermission = async () => {
-    browser.runtime.sendMessage({ action: "fetchUserScriptsPermission" }).then((p) => {
-      console.log(p);
-      setUserScriptsPermission(p);
-    });
+    browser.runtime
+      .sendMessage({ action: "fetchUserScriptsPermission" })
+      .then(setUserScriptsPermission);
   };
 
   useEffect(() => {
@@ -39,9 +40,7 @@ export default () => {
       <div className="main-container">
         {userScriptsPermission ? (
           <>
-            <span className="quote">
-              Moi ça ne me dérange pas de faire redoubler 50% de la promo.
-            </span>
+            <span className="version">v{version}</span>
             <input
               type="text"
               id="moduleSearch"
@@ -62,6 +61,7 @@ export default () => {
                 })
                 .map(({ name, author, active }) => (
                   <div
+                    key={name + author}
                     className={"module-card" + (active ? " active" : "")}
                     onClick={() => {
                       browser.runtime

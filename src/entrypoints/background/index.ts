@@ -194,7 +194,7 @@ export const init = async () => {
   };
 
   browser.runtime.onMessage.addListener(
-    (message) => new Promise((res) => handleMessage(message, res))
+    (message: any) => new Promise((res) => handleMessage(message, res))
   );
 
   if (userScriptsPermission) initModules();
