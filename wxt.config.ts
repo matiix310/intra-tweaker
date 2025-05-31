@@ -8,7 +8,8 @@ export default defineConfig({
     startUrls: ["https://intra.forge.epita.fr"],
   },
   manifest: ({ browser }) => ({
-    version: process.env.EXT_VERSION ?? "1.0.0",
+    // FIREFOX version is dynamic and managed by the CI
+    version: process.env.EXT_VERSION ?? "1.0.4",
     name: "Intra tweaker",
 
     description: "Set of tools to make the intra better",
