@@ -119,6 +119,8 @@ const run = async () => {
 
   const tags = getAllTags();
 
+  if (tags === null) return;
+
   watchTags(tags);
 
   if (tags.length == 0) return;
@@ -189,6 +191,9 @@ const run = async () => {
 const watchTags = async (currentTags: Tag[]) => {
   const start = Date.now();
   const newTags = await getTagsNow();
+
+  if (newTags === null) return;
+
   for (let newTag of newTags) {
     const tagFilter = currentTags.filter((t) => t.name == newTag.name);
     if (tagFilter.length == 0 || tagFilter[0].status != newTag.status) {

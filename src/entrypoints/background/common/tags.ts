@@ -147,7 +147,7 @@ export const getAllTags = (doc = document) => {
   const tagsTitle = Array.from(doc.getElementsByClassName("title")).find((t) =>
     t.textContent?.includes("Tags")
   );
-  if (!tagsTitle) return [];
+  if (!tagsTitle) return null;
 
   const listElement = tagsTitle.nextElementSibling;
   if (!listElement?.classList.contains("list")) return [];

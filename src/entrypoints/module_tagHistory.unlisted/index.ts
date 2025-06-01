@@ -45,7 +45,7 @@ const addHistoryBlock = () => {
 
 const gatherNewTags = () => {
   const tags = getAllTags();
-  if (tags.length == 0) return;
+  if (tags === null || tags.length == 0) return;
 
   const storedTags: Tag[] = JSON.parse(localStorage.getItem("tagsHistory") ?? "[]");
   storedTags.forEach((t) => (t.date = new Date(t.date)));

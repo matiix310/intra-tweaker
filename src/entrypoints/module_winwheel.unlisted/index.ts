@@ -174,7 +174,7 @@ const turnWheel = async (percentage: number) => {
 const run = () => {
   const tags = getAllTags();
 
-  if (tags.length > 0 && tags[0].status == "SUCCEEDED") {
+  if (tags !== null && tags.length > 0 && tags[0].status == "SUCCEEDED") {
     const tracePercentage = tags[0].element
       .getElementsByTagName("trace-symbol")
       .item(0) as HTMLElement;
