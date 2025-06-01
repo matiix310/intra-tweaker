@@ -91,8 +91,7 @@ export const elementFromTag = (tag: Tag) => {
   const tagElement = document.createElement("a");
   tagElement.classList.add("list__item");
 
-  if (tag.status !== "SUCCEEDED")
-    tagElement.classList.add("list__item__disabled");
+  if (tag.status !== "SUCCEEDED") tagElement.classList.add("list__item__disabled");
 
   const left = document.createElement("div");
   left.classList.add("list__item__left");
@@ -111,9 +110,10 @@ export const elementFromTag = (tag: Tag) => {
   tagDate.classList.add("list__item__subname");
   tagDate.setAttribute("style", "font-size: 11px;");
   // Submitted on February 11, 2025 - 23:29
-  tagDate.innerText = `Submitted on ${
-    months[tag.date.getMonth()]
-  } ${tag.date.getDay().toString().padStart(2, "0")}, ${tag.date.getFullYear()} - ${tag.date.getHours()}:${tag.date
+  tagDate.innerText = `Submitted on ${months[tag.date.getMonth()]} ${tag.date
+    .getDate()
+    .toString()
+    .padStart(2, "0")}, ${tag.date.getFullYear()} - ${tag.date.getHours()}:${tag.date
     .getMinutes()
     .toString()
     .padStart(2, "0")}`;
