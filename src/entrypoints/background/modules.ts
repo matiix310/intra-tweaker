@@ -140,6 +140,18 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "nextTag",
+    name: "Next Tag Estimation [untested]",
+    author: "lakazatong",
+    default: false,
+    children: [
+      {
+        kind: "content",
+        matches: ["*://intra.forge.epita.fr/*"],
+      },
+    ],
+  },
 ];
 
 export default modules;
