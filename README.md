@@ -14,7 +14,7 @@
 > [!WARNING]
 > The extension currently has some issues with firefox (the version of the PIE doesn't help with that). If you experience an extension crash or some missing features, try rebooting firefox or reinstalling the extension.
 > 
-> Sometimes, firefox doesn't give the required permission for the extension to operate. To check the permissions go to about:addons (type it in the top url bar) > Intra Tweaker > Manage > Permissions and data > tick everything.
+> Sometimes firefox doesn't give the required permission for the extension to operate. To check the permissions go to about:addons (type it in the top url bar) > Intra Tweaker > Manage > Permissions and data > tick everything.
 > 
 > You could also downgrade the version of intra tweaker (v1.2.3 or less). You will loose some more recent features, but it will be more stable.
 > 
