@@ -9,7 +9,7 @@ export default defineConfig({
   },
   manifest: ({ browser }) => ({
     // FIREFOX version is dynamic and managed by the CI
-    version: process.env.EXT_VERSION ?? "1.0.4",
+    version: process.env.EXT_VERSION ?? "1.2.5",
     name: "Intra tweaker",
 
     description: "Set of tools to make the intra better",
