@@ -13,7 +13,11 @@
 
 > [!WARNING]
 > The extension currently has some issues with firefox (the version of the PIE doesn't help with that). If you experience an extension crash or some missing features, try rebooting firefox or reinstalling the extension.
-> You could also downgrade the version of intra tweaker. You will loose some more recent features, but it will be more stable (mv2 <3).
+> 
+> Sometimes, firefox doesn't give the required permission for the extension to operate. To check the permissions go to about:addons (type it in the top url bar) > Intra Tweaker > Manage > Permissions and data > tick everything.
+> 
+> You could also downgrade the version of intra tweaker (v1.2.3 or less). You will loose some more recent features, but it will be more stable.
+> 
 > If you don't mind using another browser than firefox, then feel free to go check out the [google chrome](https://chromewebstore.google.com/detail/intra-tweaker/ombjiibmlhnmhbnckpkfpmgdnijhjdpf) version (which is more stable due to their support of mv3).
 
 ## Screenshots
