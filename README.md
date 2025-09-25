@@ -11,6 +11,11 @@
 
 </div>
 
+> [!WARNING]
+> The extension currently has some issues with firefox (the version of the PIE doesn't help with that). If you experience an extension crash or some missing features, try rebooting firefox or reinstalling the extension.
+> You could also downgrade the version of intra tweaker. You will loose some more recent features, but it will be more stable (mv2 <3).
+> If you don't mind using another browser than firefox, then feel free to go check out the [google chrome](https://chromewebstore.google.com/detail/intra-tweaker/ombjiibmlhnmhbnckpkfpmgdnijhjdpf) version (which is more stable due to their support of mv3).
+
 ## Screenshots
 
 ![screenshot of the tag page with intra tweaker opened](images/intra-tweaker.webp)
