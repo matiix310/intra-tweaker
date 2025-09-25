@@ -54,6 +54,8 @@ Intra tweaker is a Firefox extension made to improve the intranet of the EPITA s
     - Make failures float to the right so that it's always visible in a long trace
 - **Tests Explorer**:
     - Filter your tests with a search query or a success state
+- **Next Tag**:
+    - Show an estimation countdown until the next available tag
 
 ## Installation
 
