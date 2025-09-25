@@ -62,7 +62,7 @@ const buildGraph = async (
 
   let promises: Promise<void>[] = [];
 
-  if (recursive) {
+  if (recursive && root.accessible) {
     promises.push(
       getGraph(recursive, "https://intra.forge.epita.fr/" + root.link).then(
         (subNodes) => {
