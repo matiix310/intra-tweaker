@@ -152,6 +152,18 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "expandSubject",
+    name: "Expand Subject",
+    author: "mrnossiom",
+    default: false,
+    children: [
+      {
+        kind: "content",
+        matches: ["*://s3.cri.epita.fr/*"],
+      },
+    ],
+  },
 ];
 
 export default modules;

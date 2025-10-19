@@ -45,6 +45,7 @@ export default defineConfig({
       "*://grafana.ops.k8s.cri.epita.fr/k8s/clusters/api/*",
       "*://s3.cri.epita.fr/cri-intranet-photos/*",
       "*://s3.cri.epita.fr/cri-intranet/img/blank.jpg",
+      "*://s3.cri.epita.fr/documents.intranet.forge.epita.fr/*",
       "*://photos.cri.epita.fr/*",
     ],
 
