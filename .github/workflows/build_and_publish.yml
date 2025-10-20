@@ -1,11 +1,7 @@
 name: Build and Publish
 
 on:
-  push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
-    paths-ignore:
-      - ".github/**"
+  workflow_dispatch
 
 env:
   MAJOR_VER: 1
