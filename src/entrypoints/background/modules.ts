@@ -160,7 +160,7 @@ const modules: Module[] = [
     children: [
       {
         kind: "content",
-        matches: ["*://s3.cri.epita.fr/*"],
+        matches: ["*://s3.cri.epita.fr/documents.intranet.forge.epita.fr/*"],
       },
     ],
   },
