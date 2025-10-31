@@ -9,7 +9,7 @@
       "devDependencies": {
         "@types/bun": "latest",
         "@types/chrome": "^0.1.24",
-        "@types/firefox-webext-browser": "^120.0.5",
+        "@types/firefox-webext-browser": "^143.0.0",
         "@types/react": "^19.2.2",
         "@types/react-dom": "^19.2.2",
         "@types/webextension-polyfill": "^0.12.4",
@@ -233,7 +233,7 @@
 
     "@types/filewriter": ["@types/filewriter@0.0.33", "", {}, "sha512-xFU8ZXTw4gd358lb2jw25nxY9QAgqn2+bKKjKOYfNCzN4DKCFetK7sPtrlpg66Ywe3vWY9FNxprZawAh9wfJ3g=="],
 
-    "@types/firefox-webext-browser": ["@types/firefox-webext-browser@120.0.5", "", {}, "sha512-imn8ecga0HQWcOSvxy9i0lD+7vpHgkj1NVLvXS1lNHqHt03Z4QwazeEdoWe+C9JXpmVyKiRanb+z9D/w001tRg=="],
+    "@types/firefox-webext-browser": ["@types/firefox-webext-browser@143.0.0", "", {}, "sha512-865dYKMOP0CllFyHmgXV4IQgVL51OSQQCwSoihQ17EwugePKFSAZRc0EI+y7Ly4q7j5KyURlA7LgRpFieO4JOw=="],
 
     "@types/har-format": ["@types/har-format@1.2.16", "", {}, "sha512-fluxdy7ryD3MV6h8pTfTYpy/xQzCFC7m89nOH9y94cNqJ1mDIDPut7MnRHI3F6qRmh/cT2fUjG1MLdCNb4hE9A=="],
 

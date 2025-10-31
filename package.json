@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/chrome": "^0.1.24",
-    "@types/firefox-webext-browser": "^120.0.5",
+    "@types/firefox-webext-browser": "^143.0.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/webextension-polyfill": "^0.12.4",
