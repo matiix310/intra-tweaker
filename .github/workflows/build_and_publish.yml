@@ -39,11 +39,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Download extension (firefox)
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: firefox
       - name: Download sources
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: sources
       - name: Publish Firefox
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download extension
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
