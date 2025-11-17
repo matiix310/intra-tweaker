@@ -22,7 +22,7 @@
     "@types/chrome": "^0.1.29",
     "@types/firefox-webext-browser": "^143.0.0",
     "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.2",
+    "@types/react-dom": "^19.2.3",
     "@types/webextension-polyfill": "^0.12.4",
     "@wxt-dev/module-react": "^1.1.5",
     "glob": "^11.0.3",
