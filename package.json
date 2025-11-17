@@ -21,7 +21,7 @@
     "@types/bun": "latest",
     "@types/chrome": "^0.1.27",
     "@types/firefox-webext-browser": "^143.0.0",
-    "@types/react": "^19.2.2",
+    "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.2",
     "@types/webextension-polyfill": "^0.12.4",
     "@wxt-dev/module-react": "^1.1.5",
