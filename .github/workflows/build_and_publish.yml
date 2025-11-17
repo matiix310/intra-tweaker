@@ -5,7 +5,7 @@ on:
 
 env:
   MAJOR_VER: 1
-  MINOR_VER: 2
+  MINOR_VER: 3
 
 jobs:
   build_firefox:
