@@ -11,7 +11,7 @@ jobs:
   build_firefox:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Use Bun
         uses: oven-sh/setup-bun@v2
       - name: install and build
@@ -37,7 +37,7 @@ jobs:
     needs: build_firefox
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Download extension (firefox)
         uses: actions/download-artifact@v6
         with:
