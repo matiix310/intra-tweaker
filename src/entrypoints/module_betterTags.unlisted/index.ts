@@ -195,8 +195,16 @@ const watchTags = async (currentTags: Tag[]) => {
   if (newTags === null) return;
 
   for (let newTag of newTags) {
-    const tagFilter = currentTags.filter((t) => t.name == newTag.name);
-    if (tagFilter.length == 0 || tagFilter[0].status != newTag.status) {
+    // don't forget that tags can have the same name
+    const tagFilter = currentTags.filter(
+      (t) => t.name === newTag.name && t.date.getTime() === newTag.date.getTime()
+    );
+    // new tag or tag update and only one occurence of this tag
+    // (prevent infinite reloading when mutliple tags have the same name and date)
+    if (
+      tagFilter.length === 0 ||
+      (tagFilter.length === 1 && tagFilter[0].status !== newTag.status)
+    ) {
       const titleStr = newTag.name;
       let contentStr = "";
 
@@ -212,7 +220,7 @@ const watchTags = async (currentTags: Tag[]) => {
             content: contentStr,
           });
         } catch (error) {
-          console.error("Error while send a notification for a tag update:");
+          console.error("Error while sending a notification for a tag update:");
           console.error(error);
         }
       }
