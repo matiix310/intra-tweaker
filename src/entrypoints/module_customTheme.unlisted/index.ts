@@ -145,6 +145,9 @@ const addColorPicker = () => {
     <a id="styleChroma" class="style-button ${
       style == "styleChroma" ? "selected" : ""
     }">chroma</a>
+    <a id="styleGrimmXmas" class="style-button ${
+      style == "styleGrimmXmas" ? "selected" : ""
+    }">Grimm Noël</a>
   </div>`;
 
   main.appendChild(colorSliderContainer);
@@ -174,6 +177,7 @@ const addColorPicker = () => {
     document.getElementById("styleNone"),
     document.getElementById("styleCustom"),
     document.getElementById("styleChroma"),
+    document.getElementById("styleGrimmXmas"),
   ];
 
   styleButtons.forEach((button) => {
