@@ -48,6 +48,7 @@ Intra tweaker is a Firefox extension made to improve the intranet of the EPITA s
     - Customize the theme of the intranet with a new button in the left toolbar
         - Custom: choose your own color tint
         - Chroma: rotate along the hue spectrum
+        - Grimm Noël: Merry Christmas!
 - **Ongoing Tenants**:
     - Change the visibility of tenants without any ongoing activity
 - **Winwheel**:
