@@ -24,11 +24,11 @@ jobs:
         run: bun run zip:firefox --mv3
         env:
           EXT_VERSION: ${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: firefox
           path: .output/intra-tweaker-${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}-firefox.zip
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: sources
           path: .output/intra-tweaker-${{ env.MAJOR_VER }}.${{ env.MINOR_VER }}.${{ github.run_number }}-sources.zip
