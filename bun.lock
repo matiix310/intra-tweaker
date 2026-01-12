@@ -9,7 +9,7 @@
       },
       "devDependencies": {
         "@types/bun": "latest",
-        "@types/chrome": "^0.1.32",
+        "@types/chrome": "^0.1.33",
         "@types/firefox-webext-browser": "^143.0.0",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
@@ -238,7 +238,7 @@
 
     "@types/bun": ["@types/bun@1.3.4", "", { "dependencies": { "bun-types": "1.3.4" } }, "sha512-EEPTKXHP+zKGPkhRLv+HI0UEX8/o+65hqARxLy8Ov5rIxMBPNTjeZww00CIihrIQGEQBYg+0roO5qOnS/7boGA=="],
 
-    "@types/chrome": ["@types/chrome@0.1.32", "", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-n5Cqlh7zyAqRLQWLXkeV5K/1BgDZdVcO/dJSTa8x+7w+sx7m73UrDmduAptg4KorMtyTW2TNnPu8RGeaDMKNGg=="],
+    "@types/chrome": ["@types/chrome@0.1.33", "", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-hSwcseKjWilz8bq93kLyIfSTvFLypRbO5iRhSXdJyVFFMV9aeqIjisBI6P/0J5+FiIKMo2NejyhHXfQLN0c0tQ=="],
 
     "@types/estree": ["@types/estree@1.0.7", "", {}, "sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ=="],
 

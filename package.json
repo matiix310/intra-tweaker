@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/chrome": "^0.1.32",
+    "@types/chrome": "^0.1.33",
     "@types/firefox-webext-browser": "^143.0.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
