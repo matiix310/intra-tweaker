@@ -25,7 +25,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/webextension-polyfill": "^0.12.4",
     "@wxt-dev/module-react": "^1.1.5",
-    "glob": "^13.0.0",
+    "glob": "^13.0.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "web-ext": "^9.2.0",
