@@ -13,6 +13,10 @@ type ErrorTag = {
 
 type Tag = { name: string; date: Date; link: string } & (SuccessTag | ErrorTag);
 
+const isImpersonating = () => {
+  return document.getElementById("stop-impersonate") !== null
+}
+
 const addHistoryBlock = () => {
   const tenantsBlock = getUiBlock("Tenants");
   if (tenantsBlock == null) return;
@@ -77,7 +81,8 @@ const gatherNewTags = () => {
 };
 
 const run = () => {
-  gatherNewTags();
+  if (!isImpersonating())
+    gatherNewTags();
   addHistoryBlock();
 };
 
