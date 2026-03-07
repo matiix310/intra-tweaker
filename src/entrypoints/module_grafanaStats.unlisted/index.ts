@@ -103,7 +103,8 @@ const displayGrafana = () => {
   updateGrafana(grafanaStatElements);
   setInterval(async () => {
     updateGrafana(grafanaStatElements);
-  }, 5000);
+  // 0.4 req/s
+  }, 10000);
 };
 
 const run = async () => {

@@ -182,7 +182,8 @@ const run = async () => {
           tagStat.remaining
         } seconds`;
       tag.element.setAttribute("style", `--percentage: ${tagStat.percentage}%`);
-    }, 500);
+    // 0.2 req/s
+    }, 5000);
   });
 
   localStorage.setItem("running-tags", JSON.stringify(storedTags));
