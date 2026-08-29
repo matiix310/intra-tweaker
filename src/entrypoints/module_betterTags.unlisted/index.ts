@@ -233,9 +233,9 @@ const watchTags = async (currentTags: Tag[]) => {
 
   const processingTime = Date.now() - start;
 
-  // 3 seconds
-  if (processingTime < 2000)
-    await new Promise((r) => setTimeout(r, 2000 - processingTime));
+  // ~5 seconds
+  if (processingTime < 5000)
+    await new Promise((r) => setTimeout(r, 5000 - processingTime));
 
   watchTags(currentTags);
 };
