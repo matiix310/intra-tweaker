@@ -164,6 +164,18 @@ const modules: Module[] = [
       },
     ],
   },
+  {
+    folder: "expandGraph",
+    name: "Expand Graph",
+    author: "Matiix310",
+    default: true,
+    children: [
+      {
+        kind: "content",
+        matches: ["*://intra.forge.epita.fr/*"],
+      },
+    ],
+  },
 ];
 
 export default modules;
