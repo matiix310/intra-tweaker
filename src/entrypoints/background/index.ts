@@ -30,7 +30,7 @@ const initModules = async () => {
           registerScript(
             `./module_${module.folder}.js`,
             subModule.matches,
-            module.name + i++
+            module.name + i++,
           );
       }
     }
@@ -58,7 +58,11 @@ const unregisterScript = async (id: string) => {
 const getModulesState = async () => {
   const storage = await getItem("modulesState");
   if (!storage) return;
-  return new Map(JSON.parse(storage)) as Map<string, boolean>;
+  try {
+    return new Map(JSON.parse(storage)) as Map<string, boolean>;
+  } catch {
+    return new Map(modules.values().map((m) => [m.name, m.default ?? false]));
+  }
 };
 
 const setModulesState = async (moduleName: string, state: boolean) => {
@@ -83,7 +87,7 @@ const reloadTabsForModule = async (name: string) => {
   const module = modules.find((m) => m.name == name);
   if (!module) return;
 
-  // reaload all pages matching its filters
+  // reload all pages matching its filters
   const tabsToReaload: number[] = [];
 
   const children = module.children.filter((c) => c.kind == "content");
@@ -149,12 +153,12 @@ export const init = async () => {
           if (module) {
             let i = 0;
             for (const contentChild of module.children.filter(
-              (c) => c.kind === "content"
+              (c) => c.kind === "content",
             ))
               registerScript(
                 `./module_${module.folder}.js`,
                 contentChild.matches,
-                module.name + i++
+                module.name + i++,
               );
             reloadTabsForModule(message.name);
           }
@@ -194,7 +198,7 @@ export const init = async () => {
   };
 
   browser.runtime.onMessage.addListener(
-    (message: any) => new Promise((res) => handleMessage(message, res))
+    (message: any) => new Promise((res) => handleMessage(message, res)),
   );
 
   if (userScriptsPermission) initModules();
