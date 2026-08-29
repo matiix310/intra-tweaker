@@ -6,7 +6,7 @@ const removeWheelListener = () => {
     (e) => {
       e.stopPropagation();
     },
-    true
+    true,
   );
 };
 
@@ -45,8 +45,8 @@ const addGraphStats = (graph?: Graph) => {
       
     .graph-stats-container {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 1em;
+      left: 1em;
       display: flex;
       flex-direction: column;
     }
@@ -61,6 +61,12 @@ const addGraphStats = (graph?: Graph) => {
       
     a:has(> .subnode-button):hover > .subnode-button:not(:hover) {
       opacity: .35;
+    }
+      
+    .statediagram {
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
     }`;
 
   var style = document.createElement("style");
@@ -88,7 +94,7 @@ const addGraphStats = (graph?: Graph) => {
 
   graphStatsContainer.insertAdjacentHTML(
     "afterbegin",
-    `${requiredStats}${optionalStats}`
+    `${requiredStats}${optionalStats}`,
   );
 
   graphElement?.appendChild(graphStatsContainer);
@@ -99,16 +105,16 @@ const addSubNodesToGraph = (
   nodes: {
     name: string | undefined;
     anchor: HTMLAnchorElement;
-  }[]
+  }[],
 ) => {
   const subNodes = getSubNodes(root);
   const node = nodes.find((n) => n.name == root.name);
 
   const nodeHeight = parseFloat(
-    node?.anchor.firstElementChild?.getAttribute("height") ?? "33"
+    node?.anchor.firstElementChild?.getAttribute("height") ?? "33",
   );
   const nodeWidth = parseFloat(
-    node?.anchor.firstElementChild?.getAttribute("width") ?? "63"
+    node?.anchor.firstElementChild?.getAttribute("width") ?? "63",
   );
   const radius = nodeHeight / 6;
 
@@ -231,8 +237,8 @@ const addSubNodes = (graph?: Graph) => {
 };
 
 const run = async () => {
-  removeWheelListener();
-  const graph = await getGraph(true);
+  // removeWheelListener();
+  const graph = await getGraph();
   addGraphStats(graph);
   addSubNodes(graph);
 };
