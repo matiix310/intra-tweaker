@@ -56,19 +56,19 @@ const buildGraph = async (
   from: string,
   links: { from: string; to: string }[],
   names: Map<string, string>,
-  recursive: boolean
+  recursiveThreshold: number,
 ): Promise<Graph> => {
   const root = strToGraph(from, names);
 
   let promises: Promise<void>[] = [];
 
-  if (recursive && root.accessible) {
+  if (recursiveThreshold > names.size && root.accessible) {
     promises.push(
-      getGraph(recursive, "https://intra.forge.epita.fr/" + root.link).then(
+      getGraph(recursiveThreshold, "https://intra.forge.epita.fr/" + root.link).then(
         (subNodes) => {
           if (subNodes) root.subNodes = subNodes.children;
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -76,12 +76,12 @@ const buildGraph = async (
     links
       .filter((link) => link.from == from)
       .map(({ to }) =>
-        buildGraph(to, links, names, recursive)
+        buildGraph(to, links, names, recursiveThreshold)
           .then((g) => {
             root.children.push(g);
           })
-          .catch((e) => console.error(e))
-      )
+          .catch((e) => console.error(e)),
+      ),
   );
 
   await Promise.allSettled(promises);
@@ -89,7 +89,8 @@ const buildGraph = async (
   return root;
 };
 
-export const getGraph = async (recursive = true, link = location.href) => {
+// If a graph has more that `recursiveThreshold` nodes, it will not fetch the subnodes
+export const getGraph = async (recursiveThreshold = 50, link = location.href) => {
   const graphElement = document.getElementById("graph");
 
   if (graphElement == null) return;
@@ -124,12 +125,12 @@ export const getGraph = async (recursive = true, link = location.href) => {
     }
   }
 
-  return buildGraph("*", links, names, recursive);
+  return buildGraph("*", links, names, recursiveThreshold);
 };
 
 export const getStats = (
   graph: Graph,
-  done: string[] = []
+  done: string[] = [],
 ): {
   required: number;
   requiredValidated: number;
@@ -177,7 +178,7 @@ export const getSubNodes = (
   graph: Graph,
   nodes: Node[] = [],
   done: string[] = [],
-  root = true
+  root = true,
 ) => {
   if (done.includes(graph.name + graph.link)) return nodes;
   done.push(graph.name + graph.link);
