@@ -2,18 +2,6 @@ import type { Module } from "../../types/global";
 
 const modules: Module[] = [
   {
-    folder: "grafanaStats",
-    name: "Grafana",
-    author: "Matiix310",
-    default: true,
-    children: [
-      {
-        kind: "content",
-        matches: ["*://intra.forge.epita.fr/*"],
-      },
-    ],
-  },
-  {
     folder: "betterTags",
     name: "Tags",
     author: "Matiix310",
@@ -142,7 +130,7 @@ const modules: Module[] = [
   },
   {
     folder: "nextTag",
-    name: "Next Tag Estimation [untested]",
+    name: "Next Tag Estimation",
     author: "lakazatong",
     default: false,
     children: [
